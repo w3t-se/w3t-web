@@ -15,7 +15,11 @@
   {:query [{:root/router (comp/get-query r/MainRouter)}]
    :initial-state (fn [{:keys [] :as props}]
                     {:root/router (comp/get-initial-state r/MainRouter)})}
-  (div {:style {:width "100vw"}}
+  (div {:style {;:width "100vw"
+                :color "#f0f0f0"
+                :overflow-x "hidden"
+                :font-family "'IBM Plex Sans', sans-serif;"
+                :background-color "black"}}
        (navigation/ui-navigation)
        (r/ui-main-router router)
        (footer/ui-footer)))

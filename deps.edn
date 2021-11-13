@@ -4,13 +4,15 @@
 
            com.fulcrologic/fulcro {:mvn/version "3.5.6"}
            com.fulcrologic/fulcro-rad {:mvn/version "1.1.0-RC1"}
-           com.fulcrologic/fulcro-rad-semantic-ui {:mvn/version "1.1.8"}
+           ;com.fulcrologic/fulcro-rad-semantic-ui {:mvn/version "1.1.8"}
            
            markdown-to-hiccup {:mvn/version "0.6.2"}
            sablono {:mvn/version "0.8.6"}
            cljs-http/cljs-http {:mvn/version "0.1.46"}
 
            com.taoensso/timbre                    {:mvn/version "4.10.0"}
+
+           quil {:mvn/version "3.1.0"}
 
            com.github.mrebbinghaus/fulcro-material-ui-wrapper
            {:git/url "https://github.com/MrEbbinghaus/fulcro-material-ui-wrapper"

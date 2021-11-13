@@ -22,6 +22,7 @@
     "@mui/lab": "5.0.0-alpha.54",
     "@mui/material": "^5.1.0",
     "big.js": "6.1.1",
+    "p5": "^1.4.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-markdown": "^7.1.0",

@@ -8,17 +8,18 @@
             [se.w3t.site.pages.web-development :refer [WebDevelopmentPage]]
             [se.w3t.site.pages.devops :refer [DevOpsPage]]
             [se.w3t.site.pages.datascience :refer [DataSciencePage]]
+            [mui.layout :as l]
             ))
 
 (defrouter MainRouter [this {:keys [current-state route-factory route-props]}]
   {:always-render-body? true
    :router-targets      [LandingPage DevOpsPage DataSciencePage WebDevelopmentPage]}
-  (dom/div {:id "main-router"
-            :style {:overflow-y "auto"
-                    :overflow-x "hidden"
-                    :height "100%"
-                    :margin 0
-                    :padding 0}}
+  (l/container {:id "main-router"
+                :style {:overflow-x "hidden"
+                        ;:height "calc(100vh-96)"
+                        }
+                ;:width "100vw"
+                }
    (dom/div :.ui.loader {:classes [(when-not (= :routed current-state) "active")]})
    (when route-factory
      (route-factory (comp/computed route-props (comp/get-computed this))))))
