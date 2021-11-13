@@ -17,17 +17,17 @@
                  ;;                                            :state-map {:page 'body}})])
                  (dr/route-immediate [:component/id ::LandingPage]))}
   (l/container {}
-       (dom/img {:style {:flex "50%"
-                                        ;:class "ui large image"
-                         :position "aboslute"
+;;        (dom/img {:style {:flex "50%"
+;; :class "ui large image"
+;;                          :position "aboslute"
                          
-                         :top "0px"
-                         :width "auto"
-                         :height "800px"}
-             :src "/images/back1.jpg"})
-   (markdown/render {:body "# We gather remote geeks with a passion for executing on Projects within all areas of IT but with a special focus on DevOps, Data Science and Web Development!
-                                 ## At W3T we strive to create ready packaged solutions from the latest Open Source components and frameworks that can then be tailor made and deployed in Customer systems. Our Professional Services arm have a combined several decades of experience of building, deploying and succesfully running Products within our core areas: DevOps, Data Science and "})
+;;                          :top "0px"
+;;                          :width "auto"
+;;                          :height "800px"}
+;;              :src "/images/back1.jpg"})
+   (markdown/render {:body "# We are geeks within DevOps, Data Science and Web Development!
+## At W3T we strive to create ready packaged solutions from the latest Open Source components and frameworks that can then be tailor made and deployed in Customer systems. Our Professional Services arm have a combined several decades of experience of building, deploying and succesfully running Products within our core areas: DevOps, Data Science and "})
 
-   (markdown/render {:body "# We are strong advocates of Open Source and Collaborative Projects run by a remote Community of independent Contributors.
-                                 Our goal is to grow at a and to contribute as much as possible to the Open Source community b. Our main effort in this area is the builders of the Codo Community which aims to create a platform for independent individuals to contribute to great Projects while retaining a piece of the Cake through shared ownsership."}))
+   (markdown/render {:body "# Collaborative Open-Source Projects built by Independent Contributor Communities
+Our goal is to grow at a and to contribute as much as possible to the Open Source community b. Our main effort in this area is the builders of the Codo Community which aims to create a platform for independent individuals to contribute to great Projects while retaining a piece of the Cake through shared ownsership."}))
   )

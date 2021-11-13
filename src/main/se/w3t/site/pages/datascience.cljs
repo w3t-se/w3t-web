@@ -8,15 +8,20 @@
             [markdown-to-hiccup.core :as md]
             [sablono.core :as html :refer-macros [html]]
             [se.w3t.site.utils :as utils]
-            [se.w3t.site.markdown :as markdown]))
+            [se.w3t.site.markdown :as markdown]
+            [mui.layout.grid :as g]))
 
 (defsc DataSciencePage [this {:keys [page]}]
   {:query         [:page]
    :ident         (fn [] [:component/id ::DataSciencePage])
    :initial-state (fn [{:keys [page] :as params}] {:page (or page "")})
-   :route-segment ["landing-page"]
+   :route-segment ["datascience-page"]
    :will-enter (fn [app {:keys [] :as route-params}]
                  (dr/route-immediate [:component/id ::DataSciencePage]))}
-  (div
-   (markdown/render {:body "# We are building a modern Data platform that can be tailor made to fit your Analytics needs
-We have multiple years of experience within data related areas (Bioinformatics, Engineering)."})))
+  (g/container {:height "500px"
+                :style {:background-color "#f7f8fa"}
+                :spacing 0
+                :alignItems :center}
+               (g/item {:xs 6}
+                       (markdown/render {:body "# We are building a modern Data platform that can be tailor made to fit your Analytics needs
+We have multiple years of experience within data related areas (Bioinformatics, Engineering)."}))))
