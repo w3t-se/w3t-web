@@ -5,7 +5,9 @@
             [se.w3t.site.pages.landing-page :as landing-page]
             [se.w3t.site.pages.datascience :as datascience-page]
             [se.w3t.site.pages.devops :as devops-page]
-            [se.w3t.site.pages.web-development :as web-development-page]
+            [se.w3t.site.pages.development :as development-page]
+            [se.w3t.site.pages.codo :as codo-page]
+            [se.w3t.site.pages.kubernetes :as kubernetes-page]
             [mui.inputs :as i]
             [mui.layout :as l]
             [mui.layout.grid :as g]
@@ -25,7 +27,7 @@
              :collapsedSize "96px"
              :onMouseOver #(comp/set-state! this {:open true})
              :onMouseLeave #(comp/set-state! this {:open false})}            
-         (l/container {:height "200px"
+         (l/container {;:height "200px"
                        :spacing 0}
                       (g/container {:height "96px"
                                     ;:px 3
@@ -33,55 +35,78 @@
                                     :alignItems :center}
                                    (g/item {:xs 2;:spacing 2 :direction :row
                                              :alignItems :center}
-                                     (dom/img {:style {:width "6rem" :height "auto"}
-                                               :src "/images/w3t-white.png"
-                                               :onClick #(rroute/route-to! this landing-page/LandingPage {})}))
+                                           (dom/a {:href "#"}
+                                                  (dom/img {:style {:width "6rem" :height "auto"}
+                                                            :src "/images/w3t-white.png"
+                                                            :onClick #(rroute/route-to! this landing-page/LandingPage {})})))
                                    (g/item {:xs 1.5}
-                                           (dom/h4 {:style {:color "orange"}} "SERVICES"))
+                                           (dom/h4 {:style {:color "#e8a761" ;"orange"
+                                                            }} "SERVICES"))
                                    (g/item  {:xs 1.5}
-                                      (dom/h4 {:style {:color "orange"}}  "SOLUTIONS"))
+                                      (dom/h4 {:style {:color "#e8a761"; "orange"
+                                                       }}  "COMMUNITY"))
                                    (g/item {:xs 7}
                                            (l/stack {
                                                      :direction "row"
                                                      :justifyContent "flex-end"}
-                                                    (dom/h4 {:style {:color "orange"}}  "CONTACT")))
+                                                    (dom/h4 {:style {:color "#e8a761"; "orange"
+                                                                     }} "CONTACT")))
                                     )
-                      (g/container {:height "104px"
+                      (g/container {    ;:height "104px"
+                                        ;:py 2
+                                    :style {:padding-bottom "4rem"}
                                     :spacing 0
-                                    ;:alignItems :center
+                                        ;:alignItems :center
                                     }
                                    (g/item {:xs 2
                                              ;:alignItems :center
                                             })
                                    (g/item {:xs 1.5}
                                     (l/stack {:spacing 2}
-                                        (a {:href ""
+                                        (a {:href "#"
                                             :style {:color "#f0f0f0"
+                                                    ;:hover {:color "#000"}
+                                                    :text-decoration "none"
+                                                    :user-select "none"
+                                                    :onMouseDown (fn [e] nil)}
+                                            :onClick #(rroute/route-to! this kubernetes-page/KubernetesPage {})} "Kubernetes")
+                                        (a {:href "#"
+                                            :style {:color "#f0f0f0"
+                                                    ;:hover {:color "#000"}
                                                     :text-decoration "none"
                                                     :user-select "none"
                                                     :onMouseDown (fn [e] nil)}
                                             :onClick #(rroute/route-to! this devops-page/DevOpsPage {})} "DevOps")
-                                        (a {:href ""
+                                        (a {:href "#"
                                             :style {:color "#f0f0f0"
                                                     :text-decoration "none"}
                                             :onClick #(rroute/route-to! this datascience-page/DataSciencePage {})} "Data Science")
-                                        (a {:href ""
+                                        (a {:href "#"
                                             :style {:color "#f0f0f0"
                                                     :text-decoration "none"}
-                                            :onClick #(rroute/route-to! this datascience-page/DataSciencePage {})} "Web Development")))
+                                            :onClick #(rroute/route-to! this development-page/DevelopmentPage {})} "Development")))
                                    (g/item  {:xs 1.5}
                                            (l/stack {:spacing 2}
-                                                    (a {:href ""
+                                                    ;; (a {:href "#"
+                                                    ;;     :style {:color "#f0f0f0"
+                                                    ;;             :text-decoration "none"}
+                                                    ;;     :onClick #(rroute/route-to! this web-development-page/WebDevelopmentPage {})} "Flow")
+                                                    ;; (a {:href "#"
+                                                    ;;     :style {:color "#f0f0f0"
+                                                    ;;             :text-decoration "none"}
+                                                    ;;     :onClick #(rroute/route-to! this web-development-page/WebDevelopmentPage {})} "Logical")
+                                                    (a {:href "#"
                                                         :style {:color "#f0f0f0"
                                                                 :text-decoration "none"}
-                                                        :onClick #(rroute/route-to! this web-development-page/WebDevelopmentPage {})} "Flow")
-                                                    (a {:href ""
-                                                        :style {:color "#f0f0f0"
-                                                                :text-decoration "none"}
-                                                        :onClick #(rroute/route-to! this web-development-page/WebDevelopmentPage {})} "Logical")
-                                                    (a {:href ""
-                                                        :style {:color "#f0f0f0"
-                                                                :text-decoration "none"}
-                                                        :onClick #(rroute/route-to! this web-development-page/WebDevelopmentPage {})} "Codo")))))))
+                                                        :onClick #(rroute/route-to! this codo-page/CodoPage {})} "Codo")))
+                                   (g/item {:xs 7}
+                                           (l/stack {:direction "row"
+                                                     :justifyContent "flex-end"}
+                                                    (l/stack {:spacing 2
+                                                              :style {:text-align "right"}}
+                                                             (dom/a {:href "mailto:info@w3t.se"
+                                                                     :style {:color "#ebb871"; "orange"
+                                                                             }} "info@w3t.se")
+                                                             (dom/text "+46730322499"))))))))
 
 (def ui-navigation (comp/factory Navigation))

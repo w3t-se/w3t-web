@@ -7,7 +7,11 @@
             [mui.layout :as l]
             [mui.layout.grid :as g]
             [se.w3t.site.components.nodes-graph :refer [ui-nodes]]
-            [se.w3t.site.pages.devops :as devops-page]))
+            [se.w3t.site.pages.datascience :as datascience-page]
+            [se.w3t.site.pages.devops :as devops-page]
+            [se.w3t.site.pages.development :as development-page]
+            [se.w3t.site.pages.codo :as codo-page]
+            [se.w3t.site.pages.kubernetes :as kubernetes-page]))
 
 ;; (defn setup []
 ;;   (q/frame-rate 35))
@@ -98,58 +102,97 @@
            ;;           :src "/images/kubernetes.svg"})
            )
    (g/item {:xs 6}
-           (dom/h3 {:style {:color "#c640de"}} "PASSIONS")
-           (markdown/render {:body "# We are a Consulting business within DevOps, Data Science and Web Development!
-W3T strives to create packaged solutions from the latest Open Source components that can be tailor-made to your needs and deployed in the Cloud or your Container based infrastructure. Our Professional Services Team has a combined multiple decades of experience of building, deploying and succesfully operating Projects within our core areas: DevOps, Data Science and Web Development."}))
+           (dom/h3 {:style {:color "#a57aeb";"#c640de"
+                            }} "PASSIONS")
+           (markdown/render {:body "# We are a bunch of Geeks with a common passion for DevOps, Data Science and Software Development!
+W3T strives to create packaged solutions from the latest Open Source components that can be tailor-made to your needs and deployed in the Cloud or your Container based infrastructure. Our Professional Services Team has a combined multiple decades of experience of building, deploying and succesfully operating Projects within our core areas: DevOps, Data Science and Software Development on top of Kubernetes."}))
    (g/item {:xs 6})
 ;;    (g/item {:xs 12}
 ;;            (markdown/render {:body "```clojure
 ;; (defn [x] (+ 1 1))
 ;; ```"}))
    (g/item {:xs 12}
-           (dom/h3 {:style {:color "#c640de"}} "USE CASES"))
+           (dom/h3 {:style {:color "#a57aeb";"#c640de"
+                            }} "USE CASES"))
+   (g/item {:xs 6}
+           "I need expertise on how to Deploy and Operate a modern Container platform. "
+           (dom/h4 {:style {:color "#bdeb71"; "orange"
+                            :float "right"}
+                    :onClick #(rroute/route-to! this kubernetes-page/KubernetesPage {})} (a {:href "#"
+                                                                                             :style {:color "#bdeb71"
+                                                                                                     :text-decoration "none"}} "Kubernetes >")))
+   (g/item {:xs 6}
+           (l/stack {:direction "row"
+                     :spacing 2
+                     ;:justifyContent "flex-end"
+                     ;:alignItems "center"
+                     }
+                    (dom/img {:style {:width "auto" :height "6rem"}
+                              :src "/images/kubernetes-icon-white.png"})
+                    ;; (dom/img {:style {:width "auto" :height "6rem"}
+                    ;;           :src "/images/OpenShift-LogoType.svg"})
+                    ))
+   (g/item {:xs 6}
+           "I need to deploy a proper DevOps flow for my Team and Corresponding IT Infrastructure. "
+           (dom/h4 {:style {:color "#bdeb71";"orange"
+                           :href ""
+                           :float "right"}
+                    :onClick #(rroute/route-to! this devops-page/DevOpsPage {})} (a {:href "#"
+                                                                                     :style {:color "#bdeb71"
+                                                                                             :text-decoration "none"}} "DevOps >")))
+   (g/item {:xs 6}
+           (l/stack {:direction "row"
+                     :spacing 2
+                     ;:justifyContent "flex-end"
+                     ;:justifyContent "center"
+                     :alignItems "center"}
+                    (dom/img {:style {:width "auto" :height "6rem"}
+                              :src "/images/devops_white.png"})
+                    ;; (dom/img {:style {:width "auto" :height "6rem"}
+                    ;;           :src "/images/OpenShift-LogoType.svg"})
+                    ))
    (g/item {:xs 6}
            (l/stack {:direction "row"
                      :spacing 2
                      :justifyContent "flex-end"
-                     ;:alignItems "center"
-                     }
-                    (dom/img {:style {:width "auto" :height "6rem"}
-                              :src "/images/kubernetes.svg"})
-                    (dom/img {:style {:width "auto" :height "6rem"}
-                              :src "/images/OpenShift-LogoType.svg"})))
-   (g/item {:xs 6}
-           "I need expertise on how to Deploy and Operate a modern Container platform. "
-           (dom/h4 {:style {:color "orange"
-                           :href ""}
-                   :onClick #(rroute/route-to! this devops-page/DevOpsPage {})} "Kubernetes >"))
-   (g/item {:xs 6}
-           "I need to deploy a proper DevOps flow for my Team and Corresponding IT Infrastructure. "
-           (dom/h4 {:style {:color "orange"
-                           :href ""
-                           :float "right"}
-                   :onClick #(rroute/route-to! this devops-page/DevOpsPage {})} "DevOps >"))
-   (g/item {:xs 6}
-           (l/stack {:direction "row"
-                     :spacing 2
-                     ;:justifyContent "center"
                      :alignItems "center"}
                     (dom/img {:style {:width "auto" :height "6rem"}
-                              :src "/images/kubernetes.svg"})
-                    (dom/img {:style {:width "auto" :height "6rem"}
-                              :src "/images/OpenShift-LogoType.svg"})))
-   (g/item {:xs 6})
+                              :src "/images/dna_white.png"})))
    (g/item {:xs 6}
            (markdown/render {:body "I want to deploy an Analytics Stack to transform my Data into actionable Knowledge."})
            
-           (dom/h4 {:style {:color "orange"}} "Data >"))
-   (g/item {:xs 6})
+           (dom/h4 {:style {:color "#bdeb71"; "orange"
+                            }
+                    :onClick #(rroute/route-to! this datascience-page/DataSciencePage {})} (a {:href "#"
+                                   :style {:color "#bdeb71"
+                                           :text-decoration "none"}} "Data >")))
    (g/item {:xs 6}
-           (markdown/render {:body "I have a Web Project I quickly need some Developers to get started on."})
-           
-           (dom/h4 {:style {:color "orange"}} "Codo >"))
+           (l/stack {:direction "row"
+                     :spacing 2
+                     :justifyContent "flex-end"
+                     :alignItems "center"}
+                    (dom/img {:style {:width "auto" :height "6rem"}
+                              :src "/images/code_white.svg"})))
+   (g/item {:xs 6}
+           (markdown/render {:body "I have a Web or other Software Project that I need to get started on."})
+           (dom/h4 {:style {:color "#bdeb71"; "orange"
+                            }
+                    :onClick #(rroute/route-to! this development-page/DevelopmentPage {})} (a {:href "#"
+                                   :style {:color "#bdeb71"
+                                           :text-decoration "none"}} "Development >")))
    
    (g/item {:xs 8}
-           (dom/h3 {:style {:color "#c640de"}} "OPEN SOURCE")
+           (dom/h3 {:style {:color "#a57aeb";"#c640de"
+                            }} "OPEN SOURCE")
            (markdown/render {:body "# Collaborative Projects built by Independent Contributor Communities
-Our goal is to grow at a and to contribute as much as possible to the Open Source community b. Our main effort in this area is the builders of the Codo Community which aims to create a platform for independent individuals to contribute to great Projects while retaining a piece of the Cake through shared ownsership."}))))
+Our goal is to grow with and contribute to the Open Source Community by making Open Collaboration a built in feature of how we work. This is why we base our main recruiting around Codo, a Web Platform and Online Community of independent Contributors. Using Codo individuals can come together to work on Open Projects while retaining a piece of the Cake through shared ownsership."})
+              (g/item {:my "2rem"
+                       :xs 6}
+                      (l/stack {:direction "row"
+                                :spacing 2}
+                               (dom/img {:style {:width "auto" :height "4rem"}
+                                         :src "/images/codo3_2_web.svg"})))
+              (dom/h4 {:style {:color "#bdeb71"
+                               }} (a {:href "#"
+                                      :style {:color "#bdeb71"
+                                              :text-decoration "none"}} "Codo >")))))

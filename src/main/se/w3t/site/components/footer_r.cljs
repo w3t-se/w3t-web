@@ -32,6 +32,17 @@ info@w3t.se
 +46730322499
 #### Organisation number: [559324-8452](https://www.bolagsfakta.se/5593248452-W3T_AB)"}))
                (g/item {:xs 6}
-                       (markdown/render {:body "# Social"}))))
+                       (markdown/render {:body "# Social"})
+                       (l/stack {:spacing 10
+                                 :direction "row"}
+                                (dom/a {:href "https://twitter.com/w3t_se"}
+                                       (dom/img {:style {:width "auto" :height "3rem"}
+                                                 :src "/images/twitter_black.svg"}))
+                                (dom/a {:href ""}
+                                       (dom/img {:style {:width "auto" :height "3rem"}
+                                           :src "/images/linkedin_black.svg"}))
+                                (dom/a {:href "https://github.com/w3t-se"}
+                                       (dom/img {:style {:width "auto" :height "3rem"}
+                                                 :src "/images/github_black.svg"}))))))
 
 (def ui-footer (comp/factory Footer))

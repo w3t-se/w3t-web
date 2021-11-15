@@ -1,4 +1,4 @@
-(ns se.w3t.site.pages.devops
+(ns se.w3t.site.pages.kubernetes
   (:require [com.fulcrologic.fulcro.components :as comp :refer [defsc]] 
             [com.fulcrologic.fulcro.dom :as dom :refer [div i p a section h1 h2]]
             [com.fulcrologic.fulcro.routing.dynamic-routing :as dr]
@@ -12,15 +12,17 @@
             [mui.layout.grid :as g]
             [se.w3t.site.markdown :as markdown]))
 
-(defsc DevOpsPage [this {:keys [page]}]
+(defsc KubernetesPage [this {:keys [page]}]
   {:query         [:page]
-   :ident         (fn [] [:component/id ::DevOpsPage])
+   :ident         (fn [] [:component/id ::KubernetesPage])
    :initial-state (fn [{:keys [page] :as params}] {:page (or page "")})
-   :route-segment ["devops-page"]
+   :route-segment ["kubernetes"]
    :will-enter (fn [app {:keys [] :as route-params}]
-                 (dr/route-immediate [:component/id ::DevOpsPage]))}
+                 ;; (comp/transact! app [`(mutations/load-url {:url ~(str utils/site-url "/md/dev_page.md")
+                 ;;                                            :c ~LandingPage
+                 ;;                                            :state-map {:page 'body}})])
+                 (dr/route-immediate [:component/id ::KubernetesPage]))}
   (g/container {:my 0
-                ;:py 8
                 :spacing 4
                 :justifyContent :center
                 :alignItems :center}
@@ -28,16 +30,14 @@
                        (l/stack {:direction :row
                                  :jusifyContent :center
                                  :alignItems :center
-                                 :spacing 3
+                                 :spacing 14
                                  :style {:color "#b2b4bf"}}
-                                (h2 "DEVELOPERS") (h2 "CODE") (h2 "PIPELINES") (h2 "ARTIFACTS") (h2 "INFRASTRUCTURE"))
+                                (h2 "DEPLOY") (h2 "OPERATE") (h2 "SECURE") (h2 "MONITOR"))
                        (dom/h1 {:style {:margin-top "6rem"
-                                        :color "#e8a761"}} "DEVOPS")
-                       (markdown/render {:body "We have multiple years of experience within data related areas (Bioinformatics, Engineering)."}))
+                                        :color "#e8a761"
+                                        }} "KUBERNETES")
+                       (markdown/render {:body "Maintaining a Kubernetes platform can be challening. With packaged alternatives such as OKD and OpenShift operational expenses can be reduced."}))
                (g/item {:xs 8}
-                       (dom/h3 {:style {:color "#a57aeb";"#c640de"
-                            }} "TECH"))
+                       (dom/h3 {:style {:color "#a57aeb"}} "TECH"))
                (g/item {:xs 8}
-                       (dom/h3 {:style {:color "#a57aeb"}} "CASES")
-                       
-                       )))
+                       (dom/h3 {:style {:color "#a57aeb"}} "CASES"))))
