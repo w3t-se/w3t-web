@@ -5,12 +5,39 @@ body {
   display: flex;
   justify-content: center;
   font-family: 'Roboto', sans-serif;
+  font-size: 18;
 }
 
-body #fonts {
-  font-family: 'Roboto', sans-serif;
-  /* font-family: 'Rubik', sans-serif; */
-  /* background-color: #ebeff5; */
+a {
+    text-decoration: none;
+    color: #ebb871;
+    user-select: none;
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #ebb871;
+}
+
+h1,h2 {
+    font-family: "IBM Plex Sans", sans-serif;
+    user-select: none;
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.category-heading {
+    font-family: "IBM Plex Sans", sans-serif;
 }
 
 .app {

@@ -9,14 +9,16 @@
             [se.w3t.site.pages.datascience :refer [DataSciencePage]]
             [se.w3t.site.pages.codo :refer [CodoPage]]
             [se.w3t.site.pages.kubernetes :refer [KubernetesPage]]
+            [se.w3t.site.pages.contact :refer [ContactPage]]
             [mui.layout :as l]))
 
 (defrouter MainRouter [this {:keys [current-state route-factory route-props]}]
   {:always-render-body? true
-   :router-targets      [LandingPage DevOpsPage DataSciencePage DevelopmentPage KubernetesPage CodoPage]}
+   :router-targets      [LandingPage DevOpsPage DataSciencePage DevelopmentPage KubernetesPage CodoPage ContactPage]}
   (l/container {:id "main-router"
                 :style {:overflow-x "hidden"
                         ;:height "calc(100vh-96)"
+                        :margin-bottom "24rem"
                         }
                 ;:width "100vw"
                 }

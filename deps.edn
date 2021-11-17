@@ -16,9 +16,7 @@
 
            com.github.mrebbinghaus/fulcro-material-ui-wrapper
            {:git/url "https://github.com/MrEbbinghaus/fulcro-material-ui-wrapper"
-            :sha "058f1dd4b85542914f92f48a4010ea9ad497e48f"}
-
-           se.w3t/relaxed {:git/url "git@github.com:w3t-se/relaxed.git" :git/tag "v0.0.3" :git/sha "3553071"}}
+            :sha "058f1dd4b85542914f92f48a4010ea9ad497e48f"}}
  :nrepl {:extra-deps {nrepl {:mvn/version "RELEASE"}}
           :main-opts ["-m" "nrepl.cmdline"]}
  :aliases {:dev {:extra-paths ["src/dev"]

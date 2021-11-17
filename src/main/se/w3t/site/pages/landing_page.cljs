@@ -101,12 +101,12 @@
            ;;                   }
            ;;           :src "/images/kubernetes.svg"})
            )
-   (g/item {:xs 6}
+   (g/item {:xs 12}
            (dom/h3 {:style {:color "#a57aeb";"#c640de"
                             }} "PASSIONS")
            (markdown/render {:body "# We are a bunch of Geeks with a common passion for DevOps, Data Science and Software Development!
-W3T strives to create packaged solutions from the latest Open Source components that can be tailor-made to your needs and deployed in the Cloud or your Container based infrastructure. Our Professional Services Team has a combined multiple decades of experience of building, deploying and succesfully operating Projects within our core areas: DevOps, Data Science and Software Development on top of Kubernetes."}))
-   (g/item {:xs 6})
+W3T strives to create **packaged solutions** from the latest Open Source components that can be tailor-made to your needs and deployed in the Cloud or your Container based infrastructure. Our Professional Services Team has a combined multiple years of experience of building, deploying and succesfully operating Projects within our core areas: DevOps, Data Science and Software Development on top of Kubernetes."}))
+   ;(g/item {:xs 6})
 ;;    (g/item {:xs 12}
 ;;            (markdown/render {:body "```clojure
 ;; (defn [x] (+ 1 1))
@@ -181,7 +181,7 @@ W3T strives to create packaged solutions from the latest Open Source components 
                                    :style {:color "#bdeb71"
                                            :text-decoration "none"}} "Development >")))
    
-   (g/item {:xs 8}
+   (g/item {:xs 12}
            (dom/h3 {:style {:color "#a57aeb";"#c640de"
                             }} "OPEN SOURCE")
            (markdown/render {:body "# Collaborative Projects built by Independent Contributor Communities

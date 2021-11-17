@@ -11,17 +11,11 @@
 
 (defsc Footer [this {}]
   {}
-  (g/container {:mt 24
-                :p 8
-                :px 12
-                :style {:background-color "#f0f0f0"
-                        :color "black"
-                        :width "100vw"}}
+  (g/container {:p 12
+                :width "80vw"}
                (g/item {:xs 6}
-                       ;(dom/h1 {:style {:color "orange"}} "W3T AB")
-                       (markdown/render {:body "# W3T AB
-
-#### Adress
+               (dom/h1 "W3T AB")
+                       (markdown/render {:body "#### Adress
 W3T AB  
 Dymlingsgränd 5  
 129 30 Hägersten  
@@ -32,7 +26,7 @@ info@w3t.se
 +46730322499
 #### Organisation number: [559324-8452](https://www.bolagsfakta.se/5593248452-W3T_AB)"}))
                (g/item {:xs 6}
-                       (markdown/render {:body "# Social"})
+                       (dom/h1 "Social")
                        (l/stack {:spacing 10
                                  :direction "row"}
                                 (dom/a {:href "https://twitter.com/w3t_se"}
@@ -40,7 +34,7 @@ info@w3t.se
                                                  :src "/images/twitter_black.svg"}))
                                 (dom/a {:href ""}
                                        (dom/img {:style {:width "auto" :height "3rem"}
-                                           :src "/images/linkedin_black.svg"}))
+                                                 :src "/images/linkedin_black.svg"}))
                                 (dom/a {:href "https://github.com/w3t-se"}
                                        (dom/img {:style {:width "auto" :height "3rem"}
                                                  :src "/images/github_black.svg"}))))))

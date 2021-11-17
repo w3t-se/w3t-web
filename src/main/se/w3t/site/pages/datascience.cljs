@@ -24,7 +24,8 @@
                 :justifyContent :center
                 :alignItems :center}
                (g/item {:xs 8}
-                       (l/stack {:direction :row
+                       (l/stack {:class "category-heading"
+                                 :direction :row
                                  :jusifyContent :center
                                  :alignItems :center
                                  :spacing 7
