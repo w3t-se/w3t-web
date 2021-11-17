@@ -1,10 +1,9 @@
-{:paths   ["src/main" "resources"]
+{:paths   ["src/main" "src/mui" "resources"]
  :deps    {org.clojure/clojure    {:mvn/version "1.10.3"}
            org.clojure/clojurescript {:mvn/version "1.10.879"}
 
            com.fulcrologic/fulcro {:mvn/version "3.5.6"}
            com.fulcrologic/fulcro-rad {:mvn/version "1.1.0-RC1"}
-           ;com.fulcrologic/fulcro-rad-semantic-ui {:mvn/version "1.1.8"}
            
            markdown-to-hiccup {:mvn/version "0.6.2"}
            sablono {:mvn/version "0.8.6"}
@@ -12,11 +11,7 @@
 
            com.taoensso/timbre                    {:mvn/version "4.10.0"}
 
-           quil {:mvn/version "3.1.0"}
-
-           com.github.mrebbinghaus/fulcro-material-ui-wrapper
-           {:git/url "https://github.com/MrEbbinghaus/fulcro-material-ui-wrapper"
-            :sha "058f1dd4b85542914f92f48a4010ea9ad497e48f"}}
+           quil {:mvn/version "3.1.0"}}
  :nrepl {:extra-deps {nrepl {:mvn/version "RELEASE"}}
           :main-opts ["-m" "nrepl.cmdline"]}
  :aliases {:dev {:extra-paths ["src/dev"]
