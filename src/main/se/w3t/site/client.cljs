@@ -12,7 +12,9 @@
     [com.fulcrologic.rad.routing.history :as history]
     [com.fulcrologic.fulcro.routing.dynamic-routing :as dr]
     [se.w3t.site.ui :refer [Root]]
-    [se.w3t.site.components.footer :refer [ui-footer]])
+    [se.w3t.site.components.footer :refer [ui-footer]]
+    [se.w3t.site.components.blog-entry :refer [ui-blog-entry BlogEntry]]
+    [se.w3t.site.markdown :as markdown])
   (:require-macros
    ;[se.w3t.relaxed.components.searchable-list :as sl :refer [defsc-searchable-list]]
    ))
@@ -42,6 +44,10 @@
 ;; (def ui-project-list (comp/factory ProjectList {:keyfn :list/id}))
 
 (comment
+  (merge/merge-component! app BlogEntry (comp/get-initial-state BlogEntry {:id 0 :type "CASE" :date "01-11-21" :heading "Developing a Release Automation flow for PrimeKey AB!" :first-paragraph "PrimeKey has been developing Public Key Insfrasructure (PKI) products for almost two decades and was in a position to renew some of it's development practices with a focus on automation. Since we know how closely coupled the DevOps and underlying IT Infrastructure are, we proposed the move furter into the adoption of Kubernetes." :rest "## Site 
+
+## Merger  
+There was an ongoing merger with the now parent Company Keyfactor."}) :append [:component/id :se.w3t.site.pages.blog/Blog :blogs])
   (merge/merge-component! app ItemList (comp/get-initial-state ItemList {:id 1 :title "Baby"}) :replace [:root/items])
   (merge/merge-component! app Item (comp/get-initial-state Item {:id 0 :title "Baby0"}) :append [:list/id 1 :list/items])
   (merge/merge-component! app User (comp/get-initial-state User {:id 3 :name "Baby"}) :append [:list/id :users :list/items])
@@ -166,6 +172,16 @@
   
   (dr/change-route! app ["home"])
   (history/install-route-history! app (html5-history))
+
+  (merge/merge-component! app BlogEntry (comp/get-initial-state BlogEntry {:id 0 :type "DEVOPS" :date "18-11-21" :heading "Cool DevOps" :first-paragraph "none" :rest "```clojure
+(defn asd []
+  (+ 1 1))
+```"}) :append [:component/id :se.w3t.site.pages.blog/Blog :blogs])
+  (merge/merge-component! app BlogEntry (comp/get-initial-state BlogEntry {:id 1 :type "CASE" :date "01-11-21" :heading "Developing a Release Automation flow for PrimeKey AB!" :first-paragraph "PrimeKey has been developing Public Key Insfrasructure (PKI) products for almost two decades and was in a position to renew some of it's development practices with a focus on automation. Since we know how closely coupled the DevOps and underlying IT Infrastructure are, we proposed the move furter into the adoption of Kubernetes." :rest "## Site 
+
+## Merger  
+There was an ongoing merger with the now parent Company Keyfactor."}) :append [:component/id :se.w3t.site.pages.blog/Blog :blogs])
+
   (app/mount! app Root "app" {:initialize-state? false})
   ;(app/mount! app Root "app")
   ;(js/console.log "Loaded")

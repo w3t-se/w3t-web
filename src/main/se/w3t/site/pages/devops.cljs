@@ -8,6 +8,7 @@
             [markdown-to-hiccup.core :as md]
             [sablono.core :as html :refer-macros [html]]
             [se.w3t.site.utils :as utils]
+            [se.w3t.site.pages.blog :as blog-page]
             [mui.layout :as l]
             [mui.layout.grid :as g]
             [se.w3t.site.markdown :as markdown]))
@@ -57,4 +58,6 @@ We believe DevOps is about the merging of Team Development Processes, Build Tool
                                  :style {:color "#b2b4bf"}}
                                 (dom/img {:style {:width "auto" :height "6rem"}
                                           :src "/images/tagline-logo-full-color.svg"})
-                                (markdown/render {:body "Speeding up development processes with Release Automation for PrimeKey AB. [PrimeKey >]()"})))))
+                                (markdown/render {:body "Speeding up development processes with Release Automation for PrimeKey AB."})
+                                (dom/a {:href "#"
+                                        :onClick #(rroute/route-to! this blog-page/BlogListPage {:blog-id 0})} "PrimeKey >")))))

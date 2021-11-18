@@ -10,18 +10,16 @@
             [se.w3t.site.pages.codo :refer [CodoPage]]
             [se.w3t.site.pages.kubernetes :refer [KubernetesPage]]
             [se.w3t.site.pages.contact :refer [ContactPage]]
+            [se.w3t.site.pages.blog :refer [BlogListPage]]
             [mui.layout :as l]))
 
 (defrouter MainRouter [this {:keys [current-state route-factory route-props]}]
   {:always-render-body? true
-   :router-targets      [LandingPage DevOpsPage DataSciencePage DevelopmentPage KubernetesPage CodoPage ContactPage]}
+   :router-targets      [LandingPage DevOpsPage DataSciencePage DevelopmentPage KubernetesPage CodoPage ContactPage BlogListPage]}
   (l/container {:id "main-router"
                 :style {:overflow-x "hidden"
-                        ;:height "calc(100vh-96)"
-                        :margin-bottom "24rem"
-                        }
-                ;:width "100vw"
-                }
+                        :min-height "100vh"
+                        :margin-bottom "24rem"}}
    (dom/div :.ui.loader {:classes [(when-not (= :routed current-state) "active")]})
    (when route-factory
      (route-factory (comp/computed route-props (comp/get-computed this))))))

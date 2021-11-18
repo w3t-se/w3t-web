@@ -72,8 +72,7 @@
   (g/container {;:py 8
                 :spacing 4
                 :alignItems "center"
-                :justifyContent "center"
-                }
+                :justifyContent "center"}
    ;;        (dom/img {:style {:flex "50%"
    ;; :class "ui large image"
    ;;                          :position "aboslute"
@@ -161,7 +160,7 @@ W3T strives to create **packaged solutions** from the latest Open Source compone
    (g/item {:xs 6}
            (markdown/render {:body "I want to deploy an Analytics Stack to transform my Data into actionable Knowledge."})
            
-           (dom/h4 {:style {:color "#bdeb71"; "orange"
+           (dom/h4 {:style {:color "#bdeb71"
                             }
                     :onClick #(rroute/route-to! this datascience-page/DataSciencePage {})} (a {:href "#"
                                    :style {:color "#bdeb71"

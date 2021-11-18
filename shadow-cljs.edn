@@ -6,5 +6,6 @@
                    :modules    {:main {:init-fn se.w3t.site.client/init
                                        :entries [se.w3t.site.client]}}
                    :js-options {:entry-keys ["module" "browser" "main"]}
+                   :compiler-options {:output-feature-set :es2018}
                    :devtools   {:after-load se.w3t.site.client/refresh
                                 :preloads   [com.fulcrologic.fulcro.inspect.preload]}}}}

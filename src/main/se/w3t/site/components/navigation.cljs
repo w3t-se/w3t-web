@@ -9,6 +9,7 @@
             [se.w3t.site.pages.codo :as codo-page]
             [se.w3t.site.pages.kubernetes :as kubernetes-page]
             [se.w3t.site.pages.contact :as contact-page]
+            [se.w3t.site.pages.blog :as blog-page]
             [mui.inputs :as i]
             [mui.layout :as l]
             [mui.layout.grid :as g]
@@ -45,6 +46,10 @@
                                                 (dom/text :.navbar-heading "SERVICES"))
                                         (g/item  {:xs 1}
                                                  (dom/text :.navbar-heading "COMMUNITY"))
+                                        (g/item  {:xs 1}
+                                                 (a {:href "#"
+                                                     :onMouseDown (fn [e] nil)
+                                                     :onClick #(rroute/route-to! this blog-page/BlogListPage {})} (dom/text :.navbar-heading "BLOG")))
                                         (g/item {:xs 7}
                                                 (l/stack {:direction "row"
                                                           :justifyContent "flex-end"}
@@ -57,10 +62,10 @@
                        :spacing 0
                                         ;:alignItems :center
                        }
-                      (g/item {:xs 2.8
+                      (g/item {:xs 2.4
                                         ;:alignItems :center
                                })
-                      (g/item {:xs 0.82}
+                      (g/item {:xs 0.8}
                               (l/stack {:spacing 2}
                                        (a {:href "#"
                                            :class "navbar-link no-select"
