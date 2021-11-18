@@ -39,6 +39,11 @@
 We know how to create smooth running Software Factories using modern DevOps practices.  
 
 We believe DevOps is about the merging of Team Development Processes, Build Tooling and Pipeline Automation, Code structuring and modularization into Artifacts and of course choosing a modern IT Infrastructure that fully supports GitOps as well as Infrastucture and Configuration as Code Concepts."}))
+               (g/item {:xs 6}
+                       (dom/img {:style {:width "auto" :height "17rem"}
+                                 :src "/images/venn.svg"}))
+               (g/item {:xs 6}
+                       (markdown/render {:body "# Dividing responsibilities into correct Team Structure"}))
                ;; (g/item {:xs 8}
                ;;         (dom/h3 {:style {:color "#a57aeb"}} "TECH"))
                (g/item {:xs 12}

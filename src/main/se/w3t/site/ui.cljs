@@ -16,8 +16,7 @@
    :initial-state (fn [{:keys [] :as props}]
                     {:root/router (comp/get-initial-state r/MainRouter)})}
   (div {:style {:width "100vw"
-                :color "#f0f0f0"
-                :background-color "black"}}
+                :minWidth "900px"}}
        (navigation/ui-navigation)
        (r/ui-main-router router)
        (g/container {:style {:width "100vw"

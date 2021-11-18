@@ -6,35 +6,31 @@ body {
   justify-content: center;
   font-family: 'Roboto', sans-serif;
   font-size: 18;
+  background-color: black;
+  color: #f0f0f0;
 }
 
 a {
     text-decoration: none;
     color: #ebb871;
-    user-select: none;
-    user-drag: none;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
 }
 
 a:hover {
-    text-decoration: none;
-    color: #ebb871;
+    color: #ffd9a3;
 }
 
 h1,h2 {
     font-family: "IBM Plex Sans", sans-serif;
-    user-select: none;
-    user-drag: none;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
 }
+
+.navbar-heading {
+    color: #ebb871;
+}
+
+.navbar-link {
+    color: #f0f0f0;
+}
+
 
 .category-heading {
     font-family: "IBM Plex Sans", sans-serif;
@@ -70,7 +66,9 @@ h1,h2 {
     margin-bottom: 1px;
 }
 
-.noselect {
+.no-select {
+  user-select: none;
+  user-drag: none;
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
@@ -78,4 +76,8 @@ h1,h2 {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+}
+
+@media screen and (max-width: 700px) {
+    
 }

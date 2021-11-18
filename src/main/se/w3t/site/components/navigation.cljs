@@ -29,42 +29,28 @@
                :onMouseOver #(comp/set-state! this {:open true})
                :onMouseLeave #(comp/set-state! this {:open false})}
               (g/container {:spacing 0
-                            :style {:width "100vw"
-                             :alignItems "center"
-                             :justifyContent "center"
-                             :overflow "hidden"}}
+                            :alignItems "center"
+                            :justifyContent "center"}
                            (g/container {:height "96px"
                                          :width "80vw"
                                          :alignItems "center"
                                          :justifyContent "center"
                                          :spacing 0}
-                                        (g/item {:xs 1
-                                                 :alignItems :center}
+                                        (g/item {:xs 1}
                                                 (dom/a {:href "#"}
                                                        (dom/img {:style {:width "6rem" :height "auto"}
                                                                  :src "/images/w3t-white.png"
                                                                  :onClick #(rroute/route-to! this landing-page/LandingPage {})})))
                                         (g/item {:xs 1}
-                                                (dom/h4 {:style {:user-select "none"
-                                                                 :color "#e8a761"
-                                                                 }} "SERVICES"))
+                                                (dom/text :.navbar-heading "SERVICES"))
                                         (g/item  {:xs 1}
-                                                 (dom/h4 {:style {:user-select "none"
-                                                                  :color "#e8a761"
-                                                                  }}  "COMMUNITY"))
+                                                 (dom/text :.navbar-heading "COMMUNITY"))
                                         (g/item {:xs 7}
-                                                (l/stack {
-                                                          :direction "row"
+                                                (l/stack {:direction "row"
                                                           :justifyContent "flex-end"}
                                                          (a {:href "#"
-                                                             :style {
-                                                                     :color "#f0f0f0"
-                                        ;:hover {:color "#000"}
-                                                                     :text-decoration "none"
-                                                                     :onMouseDown (fn [e] nil)}
-                                                             :onClick #(rroute/route-to! this contact-page/ContactPage {})} (dom/h4 {:style {:color "#e8a761"}} "CONTACT"))
-                                                         ))
-                                        ))
+                                                             :onMouseDown (fn [e] nil)
+                                                             :onClick #(rroute/route-to! this contact-page/ContactPage {})} "CONTACT")))))
          (g/container {    ;:height "104px"
                                         ;:py 2
                        :style {:padding-bottom "4rem"}
@@ -77,24 +63,16 @@
                       (g/item {:xs 0.82}
                               (l/stack {:spacing 2}
                                        (a {:href "#"
-                                           :style {:color "#f0f0f0"
-                                        ;:hover {:color "#000"}
-                                                   :text-decoration "none"
-                                                   :user-select "none"}
+                                           :class "navbar-link no-select"
                                            :onClick #(rroute/route-to! this kubernetes-page/KubernetesPage {})} "Kubernetes")
-                                       (a {:href "#"
-                                           :style {:color "#f0f0f0"
-                                        ;:hover {:color "#000"}
-                                                   :text-decoration "none"
-                                                   :user-select "none"}
+                                       (a {:class "navbar-link no-select"
+                                           :href "#"
                                            :onClick #(rroute/route-to! this devops-page/DevOpsPage {})} "DevOps")
                                        (a {:href "#"
-                                           :style {:color "#f0f0f0"
-                                                   :text-decoration "none"}
+                                           :class "navbar-link no-select"
                                            :onClick #(rroute/route-to! this datascience-page/DataSciencePage {})} "Data Science")
                                        (a {:href "#"
-                                           :style {:color "#f0f0f0"
-                                                   :text-decoration "none"}
+                                           :class "navbar-link no-select"
                                            :onClick #(rroute/route-to! this development-page/DevelopmentPage {})} "Development")))
                       (g/item  {:xs 1}
                                (l/stack {:spacing 2}
@@ -107,8 +85,7 @@
                                         ;;             :text-decoration "none"}
                                         ;;     :onClick #(rroute/route-to! this web-development-page/WebDevelopmentPage {})} "Logical")
                                         (a {:href "#"
-                                            :style {:color "#f0f0f0"
-                                                    :text-decoration "none"}
+                                            :class "navbar-link no-select"
                                             :onClick #(rroute/route-to! this codo-page/CodoPage {})} "Codo")))
                       ;; (g/item {:xs 7}
                       ;;         (l/stack {:direction "row"

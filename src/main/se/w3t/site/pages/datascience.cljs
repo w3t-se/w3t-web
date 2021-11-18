@@ -23,6 +23,8 @@
                 :spacing 4
                 :justifyContent :center
                 :alignItems :center}
+               (dom/h1 {:style {:margin-top "6rem"
+                                :color "#e8a761"}} "DATA")
                (g/item {:xs 8}
                        (l/stack {:class "category-heading"
                                  :direction :row
@@ -31,10 +33,8 @@
                                  :spacing 7
                                  :style {:color "#b2b4bf"}}
                                 (h2 "COLLECT") (h2 "STORE") (h2 "TRANSFORM") (h2 "ANALYZE") (h2 "PRESENT"))
-                       (dom/h1 {:style {:margin-top "6rem"
-                                        :color "#e8a761"}} "DATA")
+                       
                        (markdown/render {:body "# We are building a modern Data platform that can be tailor made to fit your Analytics needs
 We have multiple years of experience within data related areas (Bioinformatics, Engineering)."}))
                (g/item {:xs 8}
-                       (dom/h3 {:style {:color "#a57aeb"}} "TECH")
-                       )))
+                       (dom/h3 {:style {:color "#a57aeb"}} "TECH"))))
