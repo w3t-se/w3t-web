@@ -9,6 +9,7 @@
             [se.w3t.site.pages.codo :as codo-page]
             [se.w3t.site.pages.kubernetes :as kubernetes-page]
             [se.w3t.site.pages.contact :as contact-page]
+            [se.w3t.site.pages.team :as team-page]
             [se.w3t.site.pages.blog :as blog-page]
             [mui.inputs :as i]
             [mui.layout :as l]
@@ -56,7 +57,7 @@
                                                           :justifyContent "flex-end"}
                                                          (a {:href "#"
                                                              :onMouseDown (fn [e] nil)
-                                                             :onClick #(rroute/route-to! this contact-page/ContactPage {})} "TEAM")
+                                                             :onClick #(rroute/route-to! this team-page/TeamPage {})} "TEAM")
                                                          (a {:href "#"
                                                              :onMouseDown (fn [e] nil)
                                                              :onClick #(rroute/route-to! this contact-page/ContactPage {})} "CONTACT")))))

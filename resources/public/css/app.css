@@ -81,6 +81,15 @@ h1,h2 {
                                   supported by Chrome and Opera */
 }
 
+.fade {
+    opacity: 100%;
+}
+
+.fade:hover {
+    opacity: 70%;
+}
+
+
 @media screen and (max-width: 700px) {
     
 }

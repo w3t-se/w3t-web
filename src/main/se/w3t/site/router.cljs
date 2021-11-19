@@ -10,12 +10,13 @@
             [se.w3t.site.pages.codo :refer [CodoPage]]
             [se.w3t.site.pages.kubernetes :refer [KubernetesPage]]
             [se.w3t.site.pages.contact :refer [ContactPage]]
+            [se.w3t.site.pages.team :refer [TeamPage]]
             [se.w3t.site.pages.blog :refer [BlogListPage]]
             [mui.layout :as l]))
 
 (defrouter MainRouter [this {:keys [current-state route-factory route-props]}]
   {:always-render-body? true
-   :router-targets      [LandingPage DevOpsPage DataSciencePage DevelopmentPage KubernetesPage CodoPage ContactPage BlogListPage]}
+   :router-targets      [LandingPage DevOpsPage DataSciencePage DevelopmentPage KubernetesPage CodoPage ContactPage BlogListPage TeamPage]}
   (l/container {:id "main-router"
                 :style {:overflow-x "hidden"
                         :margin-top "4rem"
