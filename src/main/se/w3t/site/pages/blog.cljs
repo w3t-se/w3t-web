@@ -1,33 +1,34 @@
 (ns se.w3t.site.pages.blog
-  (:require [com.fulcrologic.fulcro.application :as app]
-            [com.fulcrologic.fulcro.components :as comp :refer [defsc]] 
+  (:require [com.fulcrologic.fulcro.components :as comp :refer [defsc]] 
+            [com.fulcrologic.fulcro.algorithms.merge :as merge]
             [com.fulcrologic.fulcro.dom :as dom :refer [div i p a section h1]]
             [com.fulcrologic.fulcro.routing.dynamic-routing :as dr]
             [com.fulcrologic.rad.routing :as rroute]
-            [se.w3t.site.mutations :as mutations]
             [com.fulcrologic.fulcro.mutations :as m]
             [se.w3t.site.utils :as utils :refer [md->html]]
             [se.w3t.site.markdown :as markdown]
             [se.w3t.site.components.blog-entry :refer [ui-blog-entry BlogEntry]]
+            [se.w3t.site.blog-entries :as blog-entries]
             [mui.layout :as l]
             [mui.layout.grid :as g]))
 
 (defsc BlogListPage [this {:keys [blogs active-blog]}]
   {:query         [{:blogs (comp/get-query BlogEntry)}
                    :active-blog]
-   :ident         (fn [] [:component/id ::Blog])
-   :initial-state (fn [{:keys [blogs] :as params}] {:blogs (or blogs [])})
-   :route-segment ["blog" :blog-id]
-   :will-enter (fn [app {:keys [blog-id] :as route-params}]
-                 (when-let  [blog-id (some-> blog-id (js/parseInt))]
-                   (swap! (::app/state-atom app) assoc-in [:component/id ::BlogPage :active-blog blog-id])
-                   ;(react-ref )
-                   )
-                 (dr/route-immediate [:component/id ::Blog]))}
-  (g/container {}
-               (g/item {:xs 2}
-                       (dom/h1 {:style {:color "#ebb871"}} "BLOG"))
-               (g/item {:xs 10})
-               (for [blog blogs]
-                 (ui-blog-entry blog
-                                (if (= (:id blog) active-blog) {:show-rest? true})))))
+   :ident         (fn [] [:component/id ::BlogListPage])
+   :initial-state (fn [{:keys [blogs] :as params}] {:blogs (or blogs [])
+                                                    :active-blog nil})
+   :route-segment ["blog"]
+   :will-enter (fn [app {:keys [] :as route-params}]
+                 (comp/transact! app [`(se.w3t.site.mutations/load-blogs)])
+                 ;; (when-let  [blog-id (some-> blog-id (js/parseInt))]
+                 ;;   (swap! (:com.fulcrologic.fulcro.application/state-atom app) assoc-in [:component/id ::BlogPage :active-blog blog-id]))
+                 (dr/route-immediate [:component/id ::BlogListPage]))}
+  (dom/div
+   (g/container {:spacing 6}
+                (g/item {:xs 3}
+                        (dom/h2 {:style {:color "#ebb871"}} "BLOG"))
+                (g/item {:xs 8}))
+   (for [blog blogs]
+     (ui-blog-entry blog
+                    (if (= (:id blog) active-blog) {:show-rest? true})))))

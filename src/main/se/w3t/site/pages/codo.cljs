@@ -3,7 +3,6 @@
             [com.fulcrologic.fulcro.dom :as dom :refer [div i p a section h1]]
             [com.fulcrologic.fulcro.routing.dynamic-routing :as dr]
             [com.fulcrologic.rad.routing :as rroute]
-            [se.w3t.site.mutations :as mutations]
             [com.fulcrologic.fulcro.mutations :as m]
             [se.w3t.site.utils :as utils :refer [md->html]]
             [se.w3t.site.markdown :as markdown]
@@ -17,13 +16,10 @@
    :route-segment ["codo"]
    :will-enter (fn [app {:keys [] :as route-params}]
                  (dr/route-immediate [:component/id ::Codo]))}
-  (g/container {:spacing 8
-                :justifyContent :center
-                :alignItems :center}
+  (g/container {:spacing 6}
+               (g/item {:xs 3}
+                       (dom/h2 {:style {:color "#e8a761"}} "CODO"))
                (g/item {:xs 8}
-                       (dom/h1 {:style {:margin-top "6rem"
-                                        :color "#e8a761"
-                                        }} "CODO")
                        (markdown/render {:body "With the introduction of Ethereum and related Decentralized technologies (IPFS, ENS) we belive that the future of the Web is going to be Decentralized. Web 3.0 technologies will be taking over classical Client-Server architectures and along with Blockchain this will enable new types of decentralized Organisations governed by Democratic rules written in Code rather than in natural language."})
                        (dom/iframe {:width "700" :height "394"
                                     :src "https://www.youtube.com/embed/c2xzpi28oC8"

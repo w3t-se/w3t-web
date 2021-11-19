@@ -3,7 +3,6 @@
             [com.fulcrologic.fulcro.dom :as dom :refer [div i p a section h1 h2]]
             [com.fulcrologic.fulcro.routing.dynamic-routing :as dr]
             [com.fulcrologic.rad.routing :as rroute]
-            [se.w3t.site.mutations :as mutations]
             [com.fulcrologic.fulcro.mutations :as m]
             [markdown-to-hiccup.core :as md]
             [sablono.core :as html :refer-macros [html]]
@@ -26,10 +25,10 @@
   (g/container {:my 0
                 :spacing 4
                 :justifyContent :center
-                ;:alignItems :center
+                :alignItems :center
                 }
                (g/item {:xs 6}
-                       (dom/h1 {:style {:margin-top "6rem"
+                       (dom/h1 {:style {:margin-top "4rem"
                                         :color "#e8a761"
                                         }} "W3T AB"))
                (g/item {:xs 6})

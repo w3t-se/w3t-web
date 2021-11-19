@@ -18,6 +18,7 @@
    :router-targets      [LandingPage DevOpsPage DataSciencePage DevelopmentPage KubernetesPage CodoPage ContactPage BlogListPage]}
   (l/container {:id "main-router"
                 :style {:overflow-x "hidden"
+                        :margin-top "4rem"
                         :min-height "100vh"
                         :margin-bottom "24rem"}}
    (dom/div :.ui.loader {:classes [(when-not (= :routed current-state) "active")]})

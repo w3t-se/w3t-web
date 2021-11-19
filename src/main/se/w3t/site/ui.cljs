@@ -15,8 +15,7 @@
   {:query [{:root/router (comp/get-query r/MainRouter)}]
    :initial-state (fn [{:keys [] :as props}]
                     {:root/router (comp/get-initial-state r/MainRouter)})}
-  (div {:style {:width "100vw"
-                :minWidth "900px"}}
+  (div {:style {:width "100vw"}}
        (navigation/ui-navigation)
        (r/ui-main-router router)
        (g/container {:style {:width "100vw"

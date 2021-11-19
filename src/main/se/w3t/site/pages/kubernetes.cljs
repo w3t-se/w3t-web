@@ -3,7 +3,6 @@
             [com.fulcrologic.fulcro.dom :as dom :refer [div i p a section h1 h2]]
             [com.fulcrologic.fulcro.routing.dynamic-routing :as dr]
             [com.fulcrologic.rad.routing :as rroute]
-            [se.w3t.site.mutations :as mutations]
             [com.fulcrologic.fulcro.mutations :as m]
             [markdown-to-hiccup.core :as md]
             [sablono.core :as html :refer-macros [html]]
@@ -22,10 +21,9 @@
                  ;;                                            :c ~LandingPage
                  ;;                                            :state-map {:page 'body}})])
                  (dr/route-immediate [:component/id ::KubernetesPage]))}
-  (g/container {:my 0
-                :spacing 4
-                :justifyContent :center
-                :alignItems :center}
+  (g/container {:spacing 6}
+               (g/item {:xs 3}
+                       (dom/h2 {:style {:color "#e8a761"}} "KUBERNETES"))
                (g/item {:xs 8}
                        (l/stack {:direction :row
                                  :jusifyContent :center
@@ -33,9 +31,8 @@
                                  :spacing 14
                                  :style {:color "#b2b4bf"}}
                                 (h2 "DEPLOY") (h2 "OPERATE") (h2 "SECURE") (h2 "MONITOR"))
-                       (dom/h1 {:style {:margin-top "6rem"
-                                        :color "#e8a761"
-                                        }} "KUBERNETES")
                        (markdown/render {:body "Maintaining a Kubernetes platform can be challening. With packaged alternatives such as OKD and OpenShift operational expenses can be reduced. W3T has developed a packaged Kubernetes solution based on the most up to date Open Source tools from the [CNCF](https://www.cncf.io/) (Cloud Native Computing Foundtion)."}))
+               (g/item {:xs 3}
+                       (dom/h3 {:style {:color "#a57aeb"}} "TECH"))
                (g/item {:xs 8}
-                       (dom/h3 {:style {:color "#a57aeb"}} "TECH"))))
+                       (markdown/render {:body "For us, Infrastucture as Code is a must."}))))

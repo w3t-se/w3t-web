@@ -11,10 +11,10 @@
 
 (defsc Footer [this {}]
   {}
-  (g/container {:p 12
+  (g/container {:p 5
                 :width "80vw"}
                (g/item {:xs 6}
-               (dom/h1 "W3T AB")
+                       (dom/h1 "W3T AB")
                        (markdown/render {:body "#### Adress
 W3T AB  
 Dymlingsgränd 5  

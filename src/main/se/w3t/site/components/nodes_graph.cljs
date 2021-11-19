@@ -260,20 +260,17 @@
   (draw-edges state)
   (draw-nodes state))
 
-  (q/defsketch floating-graph
-    :host "nodes"
-    :size [500 500]
-    :setup setup
-    :update update-state
-    :draw draw-state
-    :middleware [m/fun-mode])
-
 (defsc Nodes [this {}]
-  {}
+  {:componentDidMount (fn []
+                         (q/defsketch floating-graph
+                           :host "nodes"
+                           :size [500 500]
+                           :setup setup
+                           :update update-state
+                           :draw draw-state
+                           :middleware [m/fun-mode]))}
+    
   (div {:id "nodes"
-        :style {:position "absolute"
-                :top 0
-                :z-index "-1"
-                :width "100vw"}}))
+        :style {:z-index "-1"}}))
 
-(def ui-nodes (comp/factory Nodes))
+(def ui-nodes (comp/computed-factory Nodes))

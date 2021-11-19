@@ -3,7 +3,6 @@
             [com.fulcrologic.fulcro.dom :as dom :refer [div i p a section h1]]
             [com.fulcrologic.fulcro.routing.dynamic-routing :as dr]
             [com.fulcrologic.rad.routing :as rroute]
-            [se.w3t.site.mutations :as mutations]
             [com.fulcrologic.fulcro.mutations :as m]
             [se.w3t.site.utils :as utils :refer [md->html]]
             [se.w3t.site.markdown :as markdown]
@@ -25,14 +24,14 @@
   (let [show-rest? (comp/get-computed this :show-rest?)
         show-rest? (comp/get-state this :show-rest?)]
     (g/container {:id (str "blog-" id)}
-                 (g/item {:xs 2}
+                 (g/item {:xs 3}
                          (l/stack {:spacing 0.1}
                                   (dom/h3 {:style {:color "#a57aeb"}} type)
                                   (dom/h4 date)))
-                 (g/item {:xs 10}
+                 (g/item {:xs 8}
                          (dom/h1 {:style {:margin-top "0.6rem"}} heading))
-                 (g/item {:xs 2})
-                 (g/item {:xs 10
+                 (g/item {:xs 3})
+                 (g/item {:xs 8
                           :style (if-not show-rest? {:white-space "nowrap"
                                                      :overflow "hidden"
                                                      :text-overflow "ellipsis"})}
@@ -41,7 +40,8 @@
                                      (markdown/render {:body rest})
                                      ;(markdown/ui-code-block {:language "bash" :value "export asd=asd"})
                                      ))
-                 (g/item {:xs 12}
+                 (g/item {:xs 3})
+                 (g/item {:xs 8}
                          (l/stack {:direction "row"
                                    :justifyContent "flex-end"}
                                   (dom/a {:href "#"

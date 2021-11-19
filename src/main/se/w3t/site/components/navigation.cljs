@@ -42,30 +42,28 @@
                                                        (dom/img {:style {:width "6rem" :height "auto"}
                                                                  :src "/images/w3t-white.png"
                                                                  :onClick #(rroute/route-to! this landing-page/LandingPage {})})))
-                                        (g/item {:xs 1}
-                                                (dom/text :.navbar-heading "SERVICES"))
-                                        (g/item  {:xs 1}
-                                                 (dom/text :.navbar-heading "COMMUNITY"))
-                                        (g/item  {:xs 1}
+                                        (l/stack {:direction "row"
+                                                          :spacing 8
+                                                  :justifyContent "flex-end"}
+                                                 (dom/text :.navbar-heading "SERVICES")
+                                                 (dom/text :.navbar-heading "COMMUNITY")
                                                  (a {:href "#"
                                                      :onMouseDown (fn [e] nil)
                                                      :onClick #(rroute/route-to! this blog-page/BlogListPage {})} (dom/text :.navbar-heading "BLOG")))
                                         (g/item {:xs 7}
                                                 (l/stack {:direction "row"
+                                                          :spacing 8
                                                           :justifyContent "flex-end"}
                                                          (a {:href "#"
                                                              :onMouseDown (fn [e] nil)
+                                                             :onClick #(rroute/route-to! this contact-page/ContactPage {})} "TEAM")
+                                                         (a {:href "#"
+                                                             :onMouseDown (fn [e] nil)
                                                              :onClick #(rroute/route-to! this contact-page/ContactPage {})} "CONTACT")))))
-         (g/container {    ;:height "104px"
-                                        ;:py 2
-                       :style {:padding-bottom "4rem"}
-                       :spacing 0
-                                        ;:alignItems :center
-                       }
-                      (g/item {:xs 2.4
-                                        ;:alignItems :center
-                               })
-                      (g/item {:xs 0.8}
+              (g/container {:style {:padding-bottom "4rem"}
+                       :spacing 0}
+                      (g/item {:xs 2.76})
+                      (g/item {:xs 0.68}
                               (l/stack {:spacing 2}
                                        (a {:href "#"
                                            :class "navbar-link no-select"

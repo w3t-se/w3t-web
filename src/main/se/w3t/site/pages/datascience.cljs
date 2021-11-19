@@ -3,7 +3,6 @@
             [com.fulcrologic.fulcro.dom :as dom :refer [div i p a section h1 h2 h3 h4]]
             [com.fulcrologic.fulcro.routing.dynamic-routing :as dr]
             [com.fulcrologic.rad.routing :as rroute]
-            [se.w3t.site.mutations :as mutations]
             [com.fulcrologic.fulcro.mutations :as m]
             [markdown-to-hiccup.core :as md]
             [sablono.core :as html :refer-macros [html]]
@@ -19,12 +18,9 @@
    :route-segment ["datascience-page"]
    :will-enter (fn [app {:keys [] :as route-params}]
                  (dr/route-immediate [:component/id ::DataSciencePage]))}
-  (g/container {:my 0
-                :spacing 4
-                :justifyContent :center
-                :alignItems :center}
-               (dom/h1 {:style {:margin-top "6rem"
-                                :color "#e8a761"}} "DATA")
+  (g/container {:spacing 6}
+               (g/item {:xs 3}
+                                      (dom/h2 {:style {:color "#e8a761"}} "DATA"))
                (g/item {:xs 8}
                        (l/stack {:class "category-heading"
                                  :direction :row
@@ -36,5 +32,5 @@
                        
                        (markdown/render {:body "# We are building a modern Data platform that can be tailor made to fit your Analytics needs
 We have multiple years of experience within data related areas (Bioinformatics, Engineering)."}))
-               (g/item {:xs 8}
+               (g/item {:xs 3}
                        (dom/h3 {:style {:color "#a57aeb"}} "TECH"))))

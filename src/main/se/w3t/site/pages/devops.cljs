@@ -3,7 +3,6 @@
             [com.fulcrologic.fulcro.dom :as dom :refer [div i p a section h1 h2]]
             [com.fulcrologic.fulcro.routing.dynamic-routing :as dr]
             [com.fulcrologic.rad.routing :as rroute]
-            [se.w3t.site.mutations :as mutations]
             [com.fulcrologic.fulcro.mutations :as m]
             [markdown-to-hiccup.core :as md]
             [sablono.core :as html :refer-macros [html]]
@@ -20,44 +19,32 @@
    :route-segment ["devops-page"]
    :will-enter (fn [app {:keys [] :as route-params}]
                  (dr/route-immediate [:component/id ::DevOpsPage]))}
-  (g/container {:my 0
-                ;:py 8
-                :spacing 4
-                :justifyContent :center
-                :alignItems :center}
+  (g/container {:spacing 6}
+               (g/item {:xs 3}
+                       (dom/h2 {:style {:color "#e8a761"}} "DEVOPS"))
                (g/item {:xs 8}
                        (l/stack {:direction :row
                                  :jusifyContent :center
                                  :alignItems :center
                                  :spacing 3
                                  :style {:color "#b2b4bf"}}
-                                (h2 "DEVELOPERS") (h2 "CODE") (h2 "PIPELINES") (h2 "ARTIFACTS") (h2 "INFRASTRUCTURE")))
-               (g/item {:xs 12}
-                       (dom/h1 {:style {:margin-top "6rem"
-                                        :color "#e8a761"}} "DEVOPS")
-                       
+                                (h2 "DEVELOPERS") (h2 "CODE") (h2 "PIPELINES") (h2 "ARTIFACTS") (h2 "INFRASTRUCTURE"))
                        (markdown/render {:body "## \"Making Software Factories run smoothly.\"  
 We know how to create smooth running Software Factories using modern DevOps practices.  
 
 We believe DevOps is about the merging of Team Development Processes, Build Tooling and Pipeline Automation, Code structuring and modularization into Artifacts and of course choosing a modern IT Infrastructure that fully supports GitOps as well as Infrastucture and Configuration as Code Concepts."}))
-               (g/item {:xs 6}
-                       (dom/img {:style {:width "auto" :height "17rem"}
-                                 :src "/images/venn.svg"}))
-               (g/item {:xs 6}
+               (g/item {:xs 3})
+               (g/item {:xs 8}
+                       (dom/img {:style {:width "34rem" :height "auto"}
+                                 :src "/images/venn.svg"})
                        (markdown/render {:body "# Dividing responsibilities into correct Team Structure"}))
-               ;; (g/item {:xs 8}
-               ;;         (dom/h3 {:style {:color "#a57aeb"}} "TECH"))
-               (g/item {:xs 12}
+               (g/item {:xs 3}
                        (dom/h3 {:style {:color "#a57aeb"}} "CASES"))
-               (g/item {:xs 12}
-                       (l/stack {:direction :row
-                                 :jusifyContent :center
-                                 :alignItems :center
-                                 :mx 4
-                                 :spacing 4
-                                 :style {:color "#b2b4bf"}}
-                                (dom/img {:style {:width "auto" :height "6rem"}
-                                          :src "/images/tagline-logo-full-color.svg"})
-                                (markdown/render {:body "Speeding up development processes with Release Automation for PrimeKey AB."})
-                                (dom/a {:href "#"
-                                        :onClick #(rroute/route-to! this blog-page/BlogListPage {:blog-id 0})} "PrimeKey >")))))
+               (g/item {:xs 8})
+               (g/item {:xs 3}
+                       (dom/a {:href "https://www.primekey.com"}
+                        (dom/img {:style {:width "14rem"}
+                                  :src "/images/tagline-logo-full-color.svg"})))
+               (g/item {:xs 8}
+                       (markdown/render {:body "Speeding up development processes with Release Automation for PrimeKey AB."})
+                       (dom/a {:onClick #(rroute/route-to! this blog-page/BlogListPage {:blog-id 1})} "PrimeKey >"))))

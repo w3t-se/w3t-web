@@ -87,8 +87,7 @@
                                         :color "white";"#8fde40"
                                         }} "meet {
            'breed of geeks'.next() }"))
-   (g/item {:xs 6
-            :id "nodes"}
+   (g/item {:xs 6}
            (ui-nodes)
            ;; (dom/img {:style {;:flex "50%"
            ;;                   ;:class "ui large image"
@@ -191,7 +190,7 @@ Our goal is to grow with and contribute to the Open Source Community by making O
                                 :spacing 2}
                                (dom/img {:style {:width "auto" :height "4rem"}
                                          :src "/images/codo3_2_web.svg"})))
-              (dom/h4 {:style {:color "#bdeb71"
-                               }} (a {:href "#"
-                                      :style {:color "#bdeb71"
-                                              :text-decoration "none"}} "Codo >")))))
+              (dom/h4 {:style {:color "#bdeb71"}} (a {:href "#"
+                                                      :onClick #(rroute/route-to! this codo-page/CodoPage {})
+                                                      :style {:color "#bdeb71"
+                                                              :text-decoration "none"}} "Codo >")))))
