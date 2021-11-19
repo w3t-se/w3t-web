@@ -32,7 +32,7 @@ info@w3t.se
                                 (dom/a {:href "https://twitter.com/w3t_se"}
                                        (dom/img {:style {:width "auto" :height "3rem"}
                                                  :src "/images/twitter_black.svg"}))
-                                (dom/a {:href ""}
+                                (dom/a {:href "https://www.linkedin.com/company/w3t"}
                                        (dom/img {:style {:width "auto" :height "3rem"}
                                                  :src "/images/linkedin_black.svg"}))
                                 (dom/a {:href "https://github.com/w3t-se"}
