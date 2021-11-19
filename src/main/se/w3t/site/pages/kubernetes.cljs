@@ -32,7 +32,8 @@
                                  :style {:color "#b2b4bf"}}
                                 (h2 "DEPLOY") (h2 "OPERATE") (h2 "SECURE") (h2 "MONITOR"))
                        (markdown/render {:body "Maintaining a Kubernetes platform can be challening. With packaged alternatives such as OKD and OpenShift operational expenses can be reduced. W3T has developed a packaged Kubernetes solution based on the most up to date Open Source tools from the [CNCF](https://www.cncf.io/) (Cloud Native Computing Foundtion)."}))
-               (g/item {:xs 3}
-                       (dom/h3 {:style {:color "#a57aeb"}} "TECH"))
-               (g/item {:xs 8}
-                       (markdown/render {:body "For us, Infrastucture as Code is a must."}))))
+               ;; (g/item {:xs 3}
+               ;;         (dom/h3 {:style {:color "#a57aeb"}} "TECH"))
+               ;; (g/item {:xs 8}
+               ;;         (markdown/render {:body "For us, Infrastucture as Code is a must."}))
+               ))

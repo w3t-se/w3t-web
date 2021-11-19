@@ -1,11 +1,11 @@
 (ns se.w3t.site.blog-entries)
 
 (defn blogs [] [
-                 {:id 0 :type "DEVOPS" :date "18-11-21" :heading "Cool DevOps" :first-paragraph "none" :rest "```clojure
-(defn plus []
-  (+ 1 1))
-```"
-                  }
+                 ;; {:id 0 :type "DEVOPS" :date "18-11-21" :heading "Cool DevOps" :first-paragraph "none" :rest "```clojure
+;; (defn plus []
+;;   (+ 1 1))
+;; ```"
+;;                   }
                  {:id 1
                   :type "CASE"
                   :date "01-11-21"

@@ -31,6 +31,4 @@
                                 (h2 "COLLECT") (h2 "STORE") (h2 "TRANSFORM") (h2 "ANALYZE") (h2 "PRESENT"))
                        
                        (markdown/render {:body "# We are building a modern Data platform that can be tailor made to fit your Analytics needs
-We have multiple years of experience within data related areas (Bioinformatics, Engineering)."}))
-               (g/item {:xs 3}
-                       (dom/h3 {:style {:color "#a57aeb"}} "TECH"))))
+We have multiple years of experience within data related areas (Bioinformatics, Engineering)."}))))
