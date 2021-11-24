@@ -27,11 +27,12 @@
                                  :spacing 10
                                  :style {:color "#b2b4bf"}}
                                 (h2 "DESIGN") (h2 "PLAN") (h2 "BUILD") (h2 "DEPLOY") (h2 "MAINTAIN"))
-                       (markdown/render {:body "# We have multiple years of experience within data related areas (Bioinformatics, Engineering)."}))
+                       (markdown/render {:body "# We are passionate about building Software Products efficiently by creating the right Team and equipping them with the right Tools."})
+                       (markdown/render {:body "We have worked in Enterprise settings as well as in Start up Projects and are taking on most Software Projects."}))
                (g/item {:xs 3}
                        (dom/h3 {:style {:color "#a57aeb"}} "WEB"))
                (g/item {:xs 8}
-                       (markdown/render {:body "We are developing Single Page Applications (SPAs) and have built up expertise over the past few years with a focus on the Clojure(Script) universe."}))
+                       (markdown/render {:body "We are developing Single Page Applications (SPAs) and have built up expertise over the past few years with a focus on the Clojure(Script) universe. We feel that Clojure is the best option for building User Space applications, Web Applications, Backend Services. We are actively learning in this space, feel free to head over to our blog for more info."}))
                ;; (g/item {:xs 3}
                ;;         (dom/h3 {:style {:color "#a57aeb"}} "CASES"))
                ))

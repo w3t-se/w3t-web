@@ -116,7 +116,7 @@ W3T strives to create **packaged solutions** from the latest Open Source compone
            "I need expertise on how to Deploy and Operate a modern Container platform. "
            (dom/h4 {:style {:color "#bdeb71"; "orange"
                             :float "right"}
-                    :onClick #(rroute/route-to! this kubernetes-page/KubernetesPage {})} (a {:href "#"
+                    :onClick #(rroute/route-to! this kubernetes-page/KubernetesPage {})} (a {:class "navbar-link"
                                                                                              :style {:color "#bdeb71"
                                                                                                      :text-decoration "none"}} "Kubernetes >")))
    (g/item {:xs 6}
@@ -132,7 +132,7 @@ W3T strives to create **packaged solutions** from the latest Open Source compone
                     ))
    (g/item {:xs 6}
            "I need to deploy a proper DevOps flow for my Team and Corresponding IT Infrastructure. "
-           (dom/h4 {:style {:color "#bdeb71";"orange"
+           (dom/h4 {:style {:color "#bdeb71"
                            :href ""
                            :float "right"}
                     :onClick #(rroute/route-to! this devops-page/DevOpsPage {})} (a {:href "#"

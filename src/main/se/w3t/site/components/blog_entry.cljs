@@ -44,7 +44,7 @@
                  (g/item {:xs 8}
                          (l/stack {:direction "row"
                                    :justifyContent "flex-end"}
-                                  (dom/a {:href "#"
+                                  (dom/a {:class "navbar-link"
                                           :onClick #(comp/set-state! this {:show-rest? (not show-rest?)})} 
                                          (if show-rest? (h1 "<") (h1 ">"))))))))
 

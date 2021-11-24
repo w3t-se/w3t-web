@@ -37,6 +37,8 @@ info@w3t.se
                                                  :src "/images/linkedin_black.svg"}))
                                 (dom/a {:href "https://github.com/w3t-se"}
                                        (dom/img {:style {:width "auto" :height "3rem"}
-                                                 :src "/images/github_black.svg"}))))))
+                                                 :src "/images/github_black.svg"})))
+                       (dom/div {:style {:margin-top "6rem"}}
+                                (markdown/render {:body "**Red Hat® and OpenShift® are trademarks of Red Hat, Inc., registered in the United States and other countries.*"})))))
 
 (def ui-footer (comp/factory Footer))
