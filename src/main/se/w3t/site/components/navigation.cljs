@@ -12,6 +12,9 @@
             [se.w3t.site.pages.team :as team-page]
             [se.w3t.site.pages.blog :as blog-page]
             [se.w3t.site.pages.partnerships :as partnerships-page]
+            [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
+            ["@mui/material/Menu" :default Menu]
+            ["@mui/material/MenuItem" :default MenuItem]
             [mui.inputs :as i]
             [mui.layout :as l]
             [mui.layout.grid :as g]
@@ -20,82 +23,98 @@
             [mui.transitions :as t]
             [se.w3t.site.fontawesome.icons :as fa]))
 
-(defsc Navigation [this {}]
-  {:initLocalState (fn [] {:open false})}
-  ;; t/slide {:appear true
-  ;;           :direction "down"}
-  ;; n/drawer {:anchor :top
-  ;;           :open true}
-  
-  (t/collapse {:in (comp/get-state this :open)
-               :collapsedSize "96px"
-               :onMouseOver #(comp/set-state! this {:open true})
-               :onMouseLeave #(comp/set-state! this {:open false})}
-              (g/container {:spacing 0
-                            :alignItems "center"
-                            :justifyContent "center"}
-                           (g/container {:height "96px"
-                                         :width "80vw"
-                                         :alignItems "center"
-                                         :justifyContent "center"
-                                         :spacing 0}
-                                        (g/item {:xs 1}
-                                                (dom/a {:style {:cursor "pointer"}}
-                                                       (dom/img {:style {:width "6rem" :height "auto"}
-                                                                 :src "/images/w3t-white.png"
-                                                                 :onClick #(rroute/route-to! this landing-page/LandingPage {})})))
-                                        (l/stack {:direction "row"
-                                                  :spacing 8
-                                                  :justifyContent "flex-end"}
-                                                 (dom/text :.navbar-heading "SERVICES")
-                                                 (dom/text :.navbar-heading "COMMUNITY")
-                                                 (a {:onClick #(rroute/route-to! this blog-page/BlogListPage {})} (dom/text :.navbar-heading "BLOG")))
-                                        (g/item {:xs 7}
-                                                (l/stack {:direction "row"
-                                                          :spacing 8
-                                                          :justifyContent "flex-end"}
-                                                         (a {:class "navbar-link no-select"
-                                                             :style {:color "#ebb871"}
-                                                             :onClick #(rroute/route-to! this team-page/TeamPage {})} "TEAM")
-                                                         (a {:class "navbar-link no-select"
-                                                             :style {:color "#ebb871"}
-                                                             :onClick #(rroute/route-to! this contact-page/ContactPage {})} "CONTACT")))))
-              (g/container {:style {:padding-bottom "4rem"}
-                            :spacing 0}
-                      (g/item {:xs 2.76})
-                      (g/item {:xs 0.68}
-                              (l/stack {:spacing 2}
-                                       (a {:class "navbar-link no-select"
-                                           :onClick #(rroute/route-to! this kubernetes-page/KubernetesPage {})} "Kubernetes")
-                                       (a {:class "navbar-link no-select"
-                                           :onClick #(rroute/route-to! this devops-page/DevOpsPage {})} "DevOps")
-                                       (a {:class "navbar-link no-select"
-                                           :onClick #(rroute/route-to! this datascience-page/DataSciencePage {})} "Data Science")
-                                       (a {:class "navbar-link no-select"
-                                           :onClick #(rroute/route-to! this development-page/DevelopmentPage {})} "Development")))
-                      (g/item  {:xs 1}
-                               (l/stack {:spacing 2}
-                                        ;; (a {:href "#"
-                                        ;;     :style {:color "#f0f0f0"
-                                        ;;             :text-decoration "none"}
-                                        ;;     :onClick #(rroute/route-to! this web-development-page/WebDevelopmentPage {})} "Flow")
-                                        ;; (a {:href "#"
-                                        ;;     :style {:color "#f0f0f0"
-                                        ;;             :text-decoration "none"}
-                                        ;;     :onClick #(rroute/route-to! this web-development-page/WebDevelopmentPage {})} "Logical")
-                                        (a {:class "navbar-link no-select"
-                                            :onClick #(rroute/route-to! this codo-page/CodoPage {})} "Codo")
-                                        (a {:class "navbar-link no-select"
-                                            :onClick #(rroute/route-to! this partnerships-page/PartnershipsPage {})} "Partners")))
-                      ;; (g/item {:xs 7}
-                      ;;         (l/stack {:direction "row"
-                      ;;                   :justifyContent "flex-end"}
-                      ;;                  (l/stack {:spacing 2
-                      ;;                            :style {:text-align "right"}}
-                      ;;                           (dom/a {:href "mailto:info@w3t.se"
-                      ;;                                   :style {:color "#ebb871"; "orange"
-                      ;;                                           }} "info@w3t.se")
-                      ;;                           (dom/text "+46730322499"))))
-                      )))
+(def ui-menu (interop/react-factory Menu))
+(def ui-menu-item (interop/react-factory MenuItem))
+
+(defsc Navigation [this props]
+  {:initLocalState (fn [] {:services-anchor  nil
+                           :community-anchor nil})}
+  (let [{:keys [services-anchor community-anchor]} (comp/get-state this)]
+    (dom/nav {:style {:display "flex"
+                      :flex-direction "row"
+                      :alignItems "center"
+                      :justifyContent "center"
+                      :padding "1.5rem"}}
+             (l/stack {:direction "row"
+                       :style {:width "85vw"
+                               :alignItems "center"
+
+                               :justifyContent "center"}}
+                      (l/stack {:direction      "row"
+                                :spacing        8
+                                :font-weight    700
+                                :alignItems     "center"
+                                :width "100%"
+                                :justifyContent "flex-start"}
+               ;; Logo
+                               (dom/a {:style {:cursor       "pointer"
+                                               :margin-right "2rem"}}
+                                      (dom/img {:style   {:width "6rem" :height "auto"}
+                                                :src     "/images/w3t_one.jpg"
+                                                :onClick #(rroute/route-to! this landing-page/LandingPage {})}))
+                               (dom/div {}
+                                        (dom/span
+                                         {:className    "navbar-heading"
+                                          :aria-controls (when services-anchor "services-menu")
+                                          :aria-haspopup "true"
+                                          :style {:font-weight 700
+                                                  :font-style "bold"}
+                                          :onClick      #(comp/set-state! this {:services-anchor (.-currentTarget %)})}
+                                         "SERVICES")
+                                        (ui-menu {:id           "services-menu"
+                                                  :anchorEl     services-anchor
+                                                  :keepMounted  true
+                                                  :open         (boolean services-anchor)
+                                                  :onClose      #(comp/set-state! this {:services-anchor nil})}
+                                                 (ui-menu-item {:onClick #(do (rroute/route-to! this kubernetes-page/KubernetesPage {})
+                                                                              (comp/set-state! this {:services-anchor nil}))}
+                                                               "Kubernetes")
+                                                 (ui-menu-item {:onClick #(do (rroute/route-to! this devops-page/DevOpsPage {})
+                                                                              (comp/set-state! this {:services-anchor nil}))}
+                                                               "DevOps")
+                                                 (ui-menu-item {:onClick #(do (rroute/route-to! this datascience-page/DataSciencePage {})
+                                                                              (comp/set-state! this {:services-anchor nil}))}
+                                                               "Data Science")
+                                                 (ui-menu-item {:onClick #(do (rroute/route-to! this development-page/DevelopmentPage {})
+                                                                              (comp/set-state! this {:services-anchor nil}))}
+                                                               "Development"))))
+                      (l/stack {:direction      "row"
+                                :display "flex"
+                                :spacing        8
+                                :font-weight    700
+                                :font-style "bold"
+                                :alignItems     "center"
+                                :justifyContent "flex-end"}
+
+                              ;; COMMUNITY Heading with MUI Menu
+                               #_(dom/div {}
+                                          (dom/span
+                                           {:className    "navbar-heading"
+                                            :aria-controls (when community-anchor "community-menu")
+                                            :aria-haspopup "true"
+                                            :onClick      #(comp/set-state! this {:community-anchor (.-currentTarget %)})}
+                                           "COMMUNITY")
+                                  ;; MUI Menu for COMMUNITY
+                                          (ui-menu {:id           "community-menu"
+                                                    :anchorEl     community-anchor
+                                                    :keepMounted  true
+                                                    :open         (boolean community-anchor)
+                                                    :onClose      #(comp/set-state! this {:community-anchor nil})}
+                                                   (ui-menu-item {:onClick #(do (rroute/route-to! this codo-page/CodoPage {})
+                                                                                (comp/set-state! this {:community-anchor nil}))}
+                                                                 "Codo")
+                                                   (ui-menu-item {:onClick #(do (rroute/route-to! this partnerships-page/PartnershipsPage {})
+                                                                                (comp/set-state! this {:community-anchor nil}))}
+                                                                 "Partners")))
+                              ;; Other Links
+                               (dom/a {:onClick #(rroute/route-to! this blog-page/BlogListPage {})}
+                                      (dom/span {:className "navbar-heading"} "BLOG"))
+                               #_(dom/a {:class   "navbar-link no-select"
+                                         :style   {:color "#ebb871"}
+                                         :onClick #(rroute/route-to! this team-page/TeamPage {})} "TEAM")
+                               (dom/a {:class   "navbar-link no-select"
+                                       :style   {:color "#ebb871"}
+                                       :onClick #(rroute/route-to! this contact-page/ContactPage {})} "WHO?"))))))
+
 
 (def ui-navigation (comp/factory Navigation))

@@ -18,7 +18,15 @@
 (defmutation load-blogs [{:keys []}]
   (action [{:keys [app state]}]
           (let [b (blog-entries/blogs)]
-            (doall (map #(merge/merge-component! app BlogEntry (comp/get-initial-state BlogEntry %)
-                                                 :append [:component/id :se.w3t.site.pages.blog/BlogListPage :blogs])
-                   b)))))
+            (mapv #(merge/merge-component! app BlogEntry (comp/get-initial-state BlogEntry %)
+                                           :append [:component/id :se.w3t.site.pages.blog/BlogListPage :blogs])
+                  b))))
 
+(defmutation load-blog [{:keys [id]}]
+  (action [{:keys [app state]}]
+          (.then (js/fetch (str "/blogs/" id ".md"))
+                 (fn [res]
+                   (.then (.text res)
+                          (fn [text]
+                            (js/console.log "res:" text)
+                            (swap! state assoc-in [:blog/id id :blog/content] text)))))))

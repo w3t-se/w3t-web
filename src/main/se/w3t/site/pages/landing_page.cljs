@@ -4,14 +4,18 @@
             [com.fulcrologic.fulcro.routing.dynamic-routing :as dr]
             [com.fulcrologic.rad.routing :as rroute]
             [se.w3t.site.markdown :as markdown]
+            [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
             [mui.layout :as l]
             [mui.layout.grid :as g]
+            ["@mui/material/Button" :default Button]
             [se.w3t.site.components.nodes-graph :refer [ui-nodes]]
             [se.w3t.site.pages.datascience :as datascience-page]
             [se.w3t.site.pages.devops :as devops-page]
             [se.w3t.site.pages.development :as development-page]
             [se.w3t.site.pages.codo :as codo-page]
             [se.w3t.site.pages.kubernetes :as kubernetes-page]))
+
+(def ui-button (interop/react-factory Button))
 
 ;; (defn setup []
 ;;   (q/frame-rate 35))
@@ -54,6 +58,27 @@
 ;;    :setup setup
 ;;    :draw draw)
 
+
+(defn DeployThings []
+  (g/container {:my 0
+                :spacing 4
+                :justifyContent :center
+                :alignItems :center}
+               (g/item {:xs 6}
+                       (dom/h1 {:style {:margin-top "4rem"
+                                        :color "#e8a761"}} "Introducing W8S"))
+               (g/item {:xs 6})
+               (g/item {:xs 6}
+                       (l/stack {:direction "column"
+                                 :spacing 8
+                                 :font-weight 700
+                                 :alignItems "center"
+                                 :justifyContent "flex-end"}
+                                (ui-button {:variant "contained"
+                                            :backgroundColor "red"} "Deploy Kubernetes")
+                                (ui-button {:variant "contained"} "Deploy Kubernetes")))
+               (g/item {:xs 6})))
+
 (defsc LandingPage [this {:keys []}]
   {:query         [:page]
    :ident         (fn [] [:component/id ::LandingPage])
@@ -64,133 +89,120 @@
                  ;;                                            :c ~LandingPage
                  ;;                                            :state-map {:page 'body}})])
                  (dr/route-immediate [:component/id ::LandingPage]))}
-  ;; (dom/div {:style {:position "absolute"
-  ;;                   :z-index "-1"
-  ;;                   :top 0
-  ;;                   :width "100vw"}
-  ;;           :id "abc"})
-  (g/container {;:py 8
+  (g/container {
                 :spacing 4
                 :alignItems "center"
                 :justifyContent "center"}
-   ;;        (dom/img {:style {:flex "50%"
-   ;; :class "ui large image"
-   ;;                          :position "aboslute"
-   
-   ;;                          :top "0px"
-   ;;                          :width "auto"
-   ;;                          :height "800px"}
-   ;;              :src "/images/back1.jpg"})
-               (g/item {:xs 6}
-                       (dom/h1 {:style {:font "64 IBM Plex Sans, sans-serif"
-                                        :font-size 64
-                                        :color "white";"#8fde40"
-                                        }} "meet {
+               #_(dom/img {:style {:flex "50%"
+               :class "ui large image"
+                                        :position "aboslute"
+
+                                        :top "0px"
+                                        :width "auto"
+                                        :height "800px"}
+                            :src "/images/back1.jpg"})
+               (DeployThings)
+               #_(g/item {:xs 6}
+                         (dom/h1 {:style {:font "64 IBM Plex Sans, sans-serif"
+                                          :font-size 64
+                                          :color "white" ;"#8fde40"
+                                          }} "meet {
            'breed of geeks'.next() }"))
-   (g/item {:xs 6}
-           (ui-nodes)
-           ;; (dom/img {:style {;:flex "50%"
-           ;;                   ;:class "ui large image"
-           ;;                   ;:position "aboslute"
-                             
-           ;;                   ;:top "0px"
-           ;;                   :width "auto"
-           ;;                   :height "20rem"
-           ;;                   }
-           ;;           :src "/images/kubernetes.svg"})
-           )
-   (g/item {:xs 12}
-           (dom/h3 {:style {:color "#a57aeb";"#c640de"
-                            }} "PASSIONS")
-           (markdown/render {:body "# We are a bunch of Geeks with a common passion for DevOps, Data Science and Software Development!
+               #_(g/item {:xs 6}
+                         (ui-nodes)
+                         )
+               (g/item {:xs 12}
+                       (dom/h3 {:style {:color "#a57aeb" ;"#c640de"
+                                        }} "PASSIONS")
+                       (markdown/render {:body "# We are a bunch of Geeks with a common passion for DevOps, Data Science and Software Development!
 W3T strives to create **packaged solutions** from the latest Open Source components that can be tailor-made to your needs and deployed in the Cloud or your Container based infrastructure. Our Professional Services Team has a combined multiple years of experience of building, deploying and succesfully operating Projects within our core areas: DevOps, Data Science and Software Development on top of Kubernetes."}))
-   ;(g/item {:xs 6})
-;;    (g/item {:xs 12}
-;;            (markdown/render {:body "```clojure
-;; (defn [x] (+ 1 1))
-;; ```"}))
-   (g/item {:xs 12}
-           (dom/h3 {:style {:color "#a57aeb";"#c640de"
-                            }} "USE CASES"))
-   (g/item {:xs 6}
-           "I need expertise on how to Deploy and Operate a modern Container platform. "
-           (dom/h4 {:style {:color "#bdeb71"; "orange"
-                            :float "right"}
-                    :onClick #(rroute/route-to! this kubernetes-page/KubernetesPage {})} (a {:class "navbar-link"
-                                                                                             :style {:color "#bdeb71"
-                                                                                                     :text-decoration "none"}} "Kubernetes >")))
-   (g/item {:xs 6}
-           (l/stack {:direction "row"
-                     :spacing 2
-                     ;:justifyContent "flex-end"
-                     ;:alignItems "center"
-                     }
-                    (dom/img {:style {:width "auto" :height "6rem"}
-                              :src "/images/kubernetes-icon-white.png"})
-                    ;; (dom/img {:style {:width "auto" :height "6rem"}
-                    ;;           :src "/images/OpenShift-LogoType.svg"})
-                    ))
-   (g/item {:xs 6}
-           "I need to deploy a proper DevOps flow for my Team and Corresponding IT Infrastructure. "
-           (dom/h4 {:style {:color "#bdeb71"
-                           :href ""
-                           :float "right"}
-                    :onClick #(rroute/route-to! this devops-page/DevOpsPage {})} (a {:href "#"
-                                                                                     :style {:color "#bdeb71"
-                                                                                             :text-decoration "none"}} "DevOps >")))
-   (g/item {:xs 6}
-           (l/stack {:direction "row"
-                     :spacing 2
-                     ;:justifyContent "flex-end"
-                     ;:justifyContent "center"
-                     :alignItems "center"}
-                    (dom/img {:style {:width "auto" :height "6rem"}
-                              :src "/images/devops_white.png"})
-                    ;; (dom/img {:style {:width "auto" :height "6rem"}
-                    ;;           :src "/images/OpenShift-LogoType.svg"})
-                    ))
-   (g/item {:xs 6}
-           (l/stack {:direction "row"
-                     :spacing 2
-                     :justifyContent "flex-end"
-                     :alignItems "center"}
-                    (dom/img {:style {:width "auto" :height "6rem"}
-                              :src "/images/dna_white.png"})))
-   (g/item {:xs 6}
-           (markdown/render {:body "I want to deploy an Analytics Stack to transform my Data into actionable Knowledge."})
+                                        ;(g/item {:xs 6})
+               ;;    (g/item {:xs 12}
+               ;;            (markdown/render {:body "```clojure
+               ;; (defn [x] (+ 1 1))
+               ;; ```"}))
+               (g/item {:xs 12}
+                       (dom/h3 {:style {:color "#a57aeb" ;"#c640de"
+                                        }} "USE CASES"))
+               (g/item {:xs 6}
+                       "I need expertise on how to Deploy and Operate a modern Container platform. "
+                       (dom/h4 {:style {:color "#bdeb71" ; "orange"
+                                        :float "right"}
+                                :onClick #(rroute/route-to! this kubernetes-page/KubernetesPage {})} (a {:class "navbar-link"
+                                                                                                         :style {:color "#bdeb71"
+                                                                                                                 :text-decoration "none"}} "Kubernetes >")))
+               (g/item {:xs 6}
+                       (l/stack {:direction "row"
+                                 :spacing 2
+                                        ;:justifyContent "flex-end"
+                                        ;:alignItems "center"
+                                 }
+                                (dom/img {:style {:width "auto" :height "6rem"}
+                                          :src "/images/kubernetes-icon-white.png"})
+                                ;; (dom/img {:style {:width "auto" :height "6rem"}
+                                ;;           :src "/images/OpenShift-LogoType.svg"})
+                                ))
+               (g/item {:xs 6}
+                       "I need to deploy a proper DevOps flow for my Team and Corresponding IT Infrastructure. "
+                       (dom/h4 {:style {:color "#bdeb71"
+                                        :href ""
+                                        :float "right"}
+                                :onClick #(rroute/route-to! this devops-page/DevOpsPage {})} (a {:href "#"
+                                                                                                 :style {:color "#bdeb71"
+                                                                                                         :text-decoration "none"}} "DevOps >")))
+               (g/item {:xs 6}
+                       (l/stack {:direction "row"
+                                 :spacing 2
+                                        ;:justifyContent "flex-end"
+                                        ;:justifyContent "center"
+                                 :alignItems "center"}
+                                (dom/img {:style {:width "auto" :height "6rem"}
+                                          :src "/images/devops_white.png"})
+                                ;; (dom/img {:style {:width "auto" :height "6rem"}
+                                ;;           :src "/images/OpenShift-LogoType.svg"})
+                                ))
+               (g/item {:xs 6}
+                       (l/stack {:direction "row"
+                                 :spacing 2
+                                 :justifyContent "flex-end"
+                                 :alignItems "center"}
+                                (dom/img {:style {:width "auto" :height "6rem"}
+                                          :src "/images/dna_white.png"})))
+               (g/item {:xs 6}
+                       (markdown/render {:body "I want to deploy an Analytics Stack to transform my Data into actionable Knowledge."})
            
-           (dom/h4 {:style {:color "#bdeb71"
-                            }
-                    :onClick #(rroute/route-to! this datascience-page/DataSciencePage {})} (a {:href "#"
-                                   :style {:color "#bdeb71"
-                                           :text-decoration "none"}} "Data >")))
-   (g/item {:xs 6}
-           (l/stack {:direction "row"
-                     :spacing 2
-                     :justifyContent "flex-end"
-                     :alignItems "center"}
-                    (dom/img {:style {:width "auto" :height "6rem"}
-                              :src "/images/code_white.svg"})))
-   (g/item {:xs 6}
-           (markdown/render {:body "I have a Web or other Software Project that I need to get started on."})
-           (dom/h4 {:style {:color "#bdeb71"; "orange"
-                            }
-                    :onClick #(rroute/route-to! this development-page/DevelopmentPage {})} (a {:href "#"
-                                   :style {:color "#bdeb71"
-                                           :text-decoration "none"}} "Development >")))
+                       (dom/h4 {:style {:color "#bdeb71"
+                                        }
+                                :onClick #(rroute/route-to! this datascience-page/DataSciencePage {})} (a {:href "#"
+                                                                                                           :style {:color "#bdeb71"
+                                                                                                                   :text-decoration "none"}} "Data >")))
+               (g/item {:xs 6}
+                       (l/stack {:direction "row"
+                                 :spacing 2
+                                 :justifyContent "flex-end"
+                                 :alignItems "center"}
+                                (dom/img {:style {:width "auto" :height "6rem"}
+                                          :src "/images/code_white.svg"})))
+               (g/item {:xs 6}
+                       (markdown/render {:body "I have a Web or other Software Project that I need to get started on."})
+                       (dom/h4 {:style {:color "#bdeb71" ; "orange"
+                                        }
+                                :onClick #(rroute/route-to! this development-page/DevelopmentPage {})} (a {:href "#"
+                                                                                                           :style {:color "#bdeb71"
+                                                                                                                   :text-decoration "none"}} "Development >")))
    
-   (g/item {:xs 12}
-           (dom/h3 {:style {:color "#a57aeb";"#c640de"
-                            }} "OPEN SOURCE")
-           (markdown/render {:body "# Collaborative Projects built by Independent Contributor Communities
+               (g/item {:xs 12}
+                       (dom/h3 {:style {:color "#a57aeb" ;"#c640de"
+                                        }} "OPEN SOURCE")
+                       (markdown/render {:body "# Collaborative Projects built by Independent Contributor Communities
 Our goal is to grow with and contribute to the Open Source Community by making Open Collaboration a built in feature of how we work. This is why we base our main recruiting around Codo, a Web Platform and Online Community of independent Contributors. Using Codo individuals can come together to work on Open Projects while retaining a piece of the Cake through shared ownsership."})
-              (g/item {:my "2rem"
-                       :xs 6}
-                      (l/stack {:direction "row"
-                                :spacing 2}
-                               (dom/img {:style {:width "auto" :height "4rem"}
-                                         :src "/images/codo3_2_web.svg"})))
-              (dom/h4 {:style {:color "#bdeb71"}} (a {:href "#"
-                                                      :onClick #(rroute/route-to! this codo-page/CodoPage {})
-                                                      :style {:color "#bdeb71"
-                                                              :text-decoration "none"}} "Codo >")))))
+                       (g/item {:my "2rem"
+                                :xs 6}
+                               (l/stack {:direction "row"
+                                         :spacing 2}
+                                        (dom/img {:style {:width "auto" :height "4rem"}
+                                                  :src "/images/codo3_2_web.svg"})))
+                       (dom/h4 {:style {:color "#bdeb71"}} (a {:href "#"
+                                                               :onClick #(rroute/route-to! this codo-page/CodoPage {})
+                                                               :style {:color "#bdeb71"
+                                                                       :text-decoration "none"}} "Codo >")))))

@@ -10,6 +10,7 @@
             [se.w3t.site.pages.blog :as blog-page]
             [mui.layout :as l]
             [mui.layout.grid :as g]
+            [se.w3t.site.components.blog-entry :as be :refer [ui-blog-entry BlogEntry]]
             [se.w3t.site.markdown :as markdown]))
 
 (defsc DevOpsPage [this {:keys [page]}]
@@ -41,10 +42,10 @@ We believe DevOps is about the merging of Team Development Processes, Build Tool
                (g/item {:xs 3}
                        (dom/h3 {:style {:color "#a57aeb"}} "CASES"))
                (g/item {:xs 8})
-               (g/item {:xs 3}
+               #_(g/item {:xs 3}
                        (dom/a {:href "https://www.primekey.com"}
                         (dom/img {:style {:width "14rem"}
                                   :src "/images/tagline-logo-full-color.svg"})))
                (g/item {:xs 8}
-                       (markdown/render {:body "Speeding up development processes with Release Automation for PrimeKey AB."})
-                       (dom/a {:onClick #(rroute/route-to! this blog-page/BlogListPage {:blog-id 1})} "PrimeKey >"))))
+                       (markdown/render {:body "Speeding up development processes with Release Automation for a Customer within Public Key Infrastructure."})
+                       (dom/a {:onClick #(rroute/route-to! this be/BlogEntry {:blog-id "primekey"})} "PKI >"))))

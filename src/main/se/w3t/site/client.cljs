@@ -1,6 +1,7 @@
 (ns se.w3t.site.client
   (:require
     [com.fulcrologic.fulcro.application :as app-default]
+    [com.fulcrologic.fulcro.react.version18 :refer [with-react18]]
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]] 
     [com.fulcrologic.rad.routing.html5-history :as hist5 :refer [html5-history]]
     [com.fulcrologic.rad.routing.history :as history]
@@ -11,7 +12,7 @@
     [se.w3t.site.mutations]
     [se.w3t.site.ui :refer [Root]]))
 
-(defonce app (app-default/fulcro-app))
+(defonce app (with-react18 (app-default/fulcro-app {})))
 
 (comment 
   (map #(merge/merge-component! app BlogEntry (comp/get-initial-state BlogEntry %)

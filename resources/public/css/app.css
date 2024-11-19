@@ -1,5 +1,4 @@
 html {
-    scroll-behavior: smooth;
 }
 
 body {
@@ -7,10 +6,22 @@ body {
   margin: 0;
   display: flex;
   justify-content: center;
-  font-family: 'Roboto', sans-serif;
+
+
   font-size: 18;
-  background-color: black;
-  color: #f0f0f0;
+  font-family: "Montserrat", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  /* background-color: black;
+  background: rgb(226,230,237);
+  background: linear-gradient(0deg, rgba(226,230,237,1) 0%, rgba(236,241,249,1) 42%); */
+  /*  background-image: url("/images/drawing.svg");
+  background-size: 100% auto;
+  background-repeat:  no-repeat;
+  background-attachment: fixed;
+  background-position-y: bottom;*/
+  color: #141414;
 }
 
 a {
@@ -23,7 +34,11 @@ a:hover {
 }
 
 h1,h2 {
-    font-family: "IBM Plex Sans", sans-serif;
+    /* font-family: "IBM Plex Sans", sans-serif; */
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: bold;
 }
 
 .navbar-heading {
@@ -40,8 +55,8 @@ h1,h2 {
 }
 
 .app {
-  font-family: Roboto, sans-serif;
-  font-weight: 300;
+  /* font-family: Roboto, sans-serif; */
+  /* font-weight: 300; */
   user-select: none;
   -webkit-user-select: none;
 }
@@ -90,6 +105,70 @@ h1,h2 {
 }
 
 
-@media screen and (max-width: 700px) {
-    
+/* @media screen and (max-width: 768px) { */
+
+/* } */
+
+.dark ::-webkit-scrollbar {
+    --tw-bg-opacity: 1;
+    /* background-color: rgb(17 24 39/var(--tw-bg-opacity)); */
+    background-color: transparent;
+}
+::-webkit-scrollbar {
+    --tw-bg-opacity: 1;
+    background-color: rgb(243 244 246/var(--tw-bg-opacity));
+    height: 0.25rem;
+    width: 0.35rem;
+}
+.dark ::-webkit-scrollbar-thumb {
+    --tw-border-opacity: 1;
+    --tw-bg-opacity: 1;
+    background-color: rgb(55 65 81/var(--tw-bg-opacity));
+}
+
+::-webkit-scrollbar-thumb {
+    --tw-bg-opacity: 1;
+    background-color: rgb(209 213 219/var(--tw-bg-opacity));
+}
+
+.space-mono-regular {
+  font-family: "Space Mono", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.space-mono-bold {
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.space-mono-regular-italic {
+  font-family: "Space Mono", monospace;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.space-mono-bold-italic {
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.container {
+  position: relative;
+  /* Other styles */
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: -50px;    /* Adjust to move the image upward */
+  left: -50px;   /* Adjust to move the image to the left */
+  width: calc(100% + 100px);   /* Extend the width */
+  height: calc(100% + 100px);  /* Extend the height */
+  background-image: url('/images/drawing.svg');
+  background-repeat: no-repeat;
+  background-size: cover;   /* Adjust as needed */
+  z-index: -1;              /* Place it behind the container content */
 }

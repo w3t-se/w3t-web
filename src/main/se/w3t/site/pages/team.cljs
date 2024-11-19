@@ -31,10 +31,10 @@
                               :sx {:width 800 :height 1200}
                               :cols 2
                               :rowHeight 221}
-                             (team-item/ui-team-item {:name "Daniel Hermansson"
+                             (team-item/ui-team-item {:name "Daniel"
                                                       :source "https://storageapi.fleek.co/zertan-team-bucket/profiles/daniel.jpg"
                                                       :github "zertan"})
                              (team-item/ui-team-item
-                              {:name "Robin Josef"
+                              {:name "Robin"
                                :source "https://storageapi.fleek.co/zertan-team-bucket/profiles/robin.jpg"
                                :github "16pj"}))))

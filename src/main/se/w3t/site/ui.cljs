@@ -15,13 +15,7 @@
   {:query [{:root/router (comp/get-query r/MainRouter)}]
    :initial-state (fn [{:keys [] :as props}]
                     {:root/router (comp/get-initial-state r/MainRouter)})}
-  (div {:style {:width "100vw"}}
-       (navigation/ui-navigation)
-       (r/ui-main-router router)
-       (g/container {:style {:width "100vw"
-                             :alignItems "center"
-                             :justifyContent "center"
-                             :overflow "hidden"
-                             :background-color "#f0f0f0"
-                             :color "black"}}
-                    (footer/ui-footer))))
+  (comp/fragment
+   (navigation/ui-navigation)
+   (r/ui-main-router router)
+   (footer/ui-footer)))
