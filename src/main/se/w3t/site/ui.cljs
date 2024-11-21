@@ -15,7 +15,7 @@
   {:query [{:root/router (comp/get-query r/MainRouter)}]
    :initial-state (fn [{:keys [] :as props}]
                     {:root/router (comp/get-initial-state r/MainRouter)})}
-  (comp/fragment
+  (comp/fragment {}
    (navigation/ui-navigation)
    (r/ui-main-router router)
    (footer/ui-footer)))

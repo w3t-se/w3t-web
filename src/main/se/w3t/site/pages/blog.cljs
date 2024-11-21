@@ -18,21 +18,24 @@
    :ident         (fn [] [:component/id ::BlogListPage])
    :initial-state (fn [{:keys [blogs] :as params}] {:blogs (or blogs [])
                                                     :active-blog nil})
-   :route-segment ["blogs"]
+   :route-segment ["blog"]
    :will-enter (fn [app {:keys [] :as route-params}]
-                 (println "p:" route-params)
+                 (let [app-element (.getElementById js/document "app")]
+                   (.scrollTo app-element 0 0))
                  (comp/transact! app [`(se.w3t.site.mutations/load-blogs)])
                  ;; (when-let  [blog-id (some-> blog-id (js/parseInt))]
                  ;;   (swap! (:com.fulcrologic.fulcro.application/state-atom app) assoc-in [:component/id ::BlogPage :active-blog blog-id]))
                  (dr/route-immediate [:component/id ::BlogListPage]))}
   (dom/div {:style {:display "flex"
                     :flex-direction "column"}}
-   (g/container {:spacing 1}
+   #_(g/container {:spacing 1}
                 (g/item {:xs 3}
-                        (dom/h2 {:style {:color "#ebb871"}} "BLOG"))
+                        #_(dom/h1 {:class "navbar-heading"} "BLOG"))
                 (g/item {:xs 8}))
    (for [blog blogs]
-     (dom/div {:mouse "pointer"
+     (dom/div {
+               :style {:margin-bottom "2rem"
+                       :cursor "pointer"}
                :onClick #(rroute/route-to! this be/BlogEntry {:blog-id (:blog/id blog)})}
        (ui-blog-entry blog
                       {:show-rest? false

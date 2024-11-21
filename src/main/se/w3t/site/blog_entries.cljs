@@ -21,18 +21,20 @@
                                    :tags #{:solid-js :squint-cljs}
                                    :date #inst "2024-11-11"
                                    :author "zertan"
+                                   :sections ["intro" "root component" "main component" "details"]
                                    :heading "# Introducing: [Sqeave](https://github.com/w3t-se/sqeave) a Cljs-squint based Solid-js framework"
                                    :first-paragraph "(Don't worry clarification ahead :blush:)"
                                    :image "/images/sqeave.png"
                                    :content ""}
-                                  {:id "crd-viz"
+                                  {:id "lifter"
                                    :type "DEVELOPMENT"
-                                   :tags #{:fulcro}
+                                   :tags #{:fulcro :devops}
                                    :sections ["intro"]
                                    :author "zertan"
                                    :date #inst "2023-10-01"
-                                   :heading "# Introducing [crd-viz](https://github.com/w3t-se/crd-viz) ..."
-                                   :first-paragraph "We are proud to announce crd-viz, a tool designed to make the creation of Kubernetes Custom Resource Definitions (CRDs) more intuitive. With crd-viz, you can interactively build and visualize your CustomResource YAMLs, reducing errors and accelerating development."
+                                   :heading "# Introducing ... [Lifter](https://github.com/w3t-se/lifter)!"
+                                   :image "/images/lifter_dude_wins.svg"
+                                   :first-paragraph "We are proud to announce [Lifter](https://github.com/w3t-se/lifter), a tool designed to make the creation of Kubernetes Custom Resource Definitions (CRDs) more intuitive. With Lifter, you can interactively build and visualize your CustomResource YAMLs, reducing errors and accelerating development."
                                    :content ""}
                                   {:id "lf"
                                    :type "CASE"

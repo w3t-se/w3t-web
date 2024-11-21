@@ -11,19 +11,24 @@
             [mui.transitions :as t]
             [cljs-time.core :as tc]
             [cljs-time.format :as f]
+            [clojure.string :as string]
             [com.fulcrologic.rad.type-support.date-time :as dt]))
 
 (def formatter (f/formatter "yyyy-MM-dd"))
 
+(defn get-reading-time [text]
+  (int (/ (count (remove string/blank? (string/split text #"\s+"))) 230)))
+
 (defsc BlogEntry [this {:blog/keys [id type date image heading first-paragraph reading-time content sections author] :as props}]
   {:query         [:blog/id :blog/type :blog/date :blog/heading :blog/first-paragraph :blog/image :blog/reading-time :blog/content :blog/sections :blog/author]
    :ident         :blog/id
-   :route-segment ["blogs" :blog-id]
+   :route-segment ["blog" :blog-id]
    :will-enter (fn [app {:keys [blog-id] :as route-params}]
                  (comp/transact! app `[(se.w3t.site.mutations/load-blog ~{:id blog-id})])
                  ;; (when-let  [blog-id (some-> blog-id (js/parseInt))]
                  ;;   (swap! (:com.fulcrologic.fulcro.application/state-atom app) assoc-in [:component/id ::BlogPage :active-blog blog-id]))
-                 (js/window.scrollTo 0 0)
+                 (let [app-element (.getElementById js/document "app")]
+                   (.scrollTo app-element 0 0))
                  (dr/route-immediate [:blog/id blog-id]))
    :initial-state (fn [{:keys [id type date heading first-paragraph image reading-time content sections author] :as params}] {:blog/id id
                                                                                                                               :blog/date date
@@ -44,11 +49,14 @@
                 (comp/get-computed this :back?)
                 (comp/get-state this :back?))]
     (g/container {:id (str "blog-" id)
-                  :spacing 2
+                  :width "100%"
+                  :overflow-y "visible"
+                  :spacing 4
                                         ;:class "space-mono-regular"
 
                   :font-size "16px"}
-                 (g/item {:xs 3}
+                 (g/item {:xs 3
+                          :top "2rem"}
                          (l/stack {:spacing 0.1
                                    :style {:position (if show-rest? "fixed" "relative")}}
                                   (dom/h3 {:style {:color (condp = type
@@ -61,10 +69,11 @@
                                                             "#a57aeb")}} type)
                                   (dom/h4 (str (f/unparse formatter (tc/date-time date))))
                                   (when author (dom/a {:href (str "https://github.com/" author)} (str "@" author)))
-                                  (dom/p reading-time)
-                                  (l/stack {:margin-top "2rem"}
-                                           (for [s sections]
-                                             (dom/a {:rel "noopener" :href (str "#" s)} s)))))
+                                  (dom/p {} (str (get-reading-time content) " min"))
+                                  (when show-rest?
+                                    (l/stack {:style {:margin-top "2rem"}}
+                                             (for [s sections]
+                                               (dom/a {:rel "noopener" :href (str "#" s)} s))))))
                  (g/item {:xs 9}
                          (dom/div {}
                                   (when image (dom/img {:style {:width "100%"

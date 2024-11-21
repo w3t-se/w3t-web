@@ -59,32 +59,14 @@
 ;;    :draw draw)
 
 
-(defn DeployThings []
-  (g/container {:my 0
-                :spacing 4
-                :justifyContent :center
-                :alignItems :center}
-               (g/item {:xs 6}
-                       (dom/h1 {:style {:margin-top "4rem"
-                                        :color "#e8a761"}} "Introducing W8S"))
-               (g/item {:xs 6})
-               (g/item {:xs 6}
-                       (l/stack {:direction "column"
-                                 :spacing 8
-                                 :font-weight 700
-                                 :alignItems "center"
-                                 :justifyContent "flex-end"}
-                                (ui-button {:variant "contained"
-                                            :backgroundColor "red"} "Deploy Kubernetes")
-                                (ui-button {:variant "contained"} "Deploy Kubernetes")))
-               (g/item {:xs 6})))
-
 (defsc LandingPage [this {:keys []}]
   {:query         [:page]
    :ident         (fn [] [:component/id ::LandingPage])
    :initial-state (fn [{:keys [page] :as params}] {:page (or page "")})
    :route-segment ["home"]
    :will-enter (fn [app {:keys [] :as route-params}]
+                 (let [app-element (.getElementById js/document "app")]
+                   (.scrollTo app-element 0 0))
                  ;; (comp/transact! app [`(mutations/load-url {:url ~(str utils/site-url "/md/landing_page.md")
                  ;;                                            :c ~LandingPage
                  ;;                                            :state-map {:page 'body}})])
@@ -101,7 +83,7 @@
                                         :width "auto"
                                         :height "800px"}
                             :src "/images/back1.jpg"})
-               (DeployThings)
+
                #_(g/item {:xs 6}
                          (dom/h1 {:style {:font "64 IBM Plex Sans, sans-serif"
                                           :font-size 64

@@ -18,6 +18,8 @@
    :initial-state (fn [{:keys [page] :as params}] {:page (or page "")})
    :route-segment ["partners"]
    :will-enter (fn [app {:keys [] :as route-params}]
+                 (let [app-element (.getElementById js/document "app")]
+                   (.scrollTo app-element 0 0))
                  (dr/route-immediate [:component/id ::PartnershipsPage]))}
   (dom/div
    (g/container {:spacing 6

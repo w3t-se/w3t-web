@@ -9,6 +9,7 @@
             [se.w3t.site.pages.codo :as codo-page]
             [se.w3t.site.pages.kubernetes :as kubernetes-page]
             [se.w3t.site.pages.contact :as contact-page]
+            [se.w3t.site.pages.w8s :as w8s-page]
             [se.w3t.site.pages.team :as team-page]
             [se.w3t.site.pages.blog :as blog-page]
             [se.w3t.site.pages.partnerships :as partnerships-page]
@@ -26,15 +27,46 @@
 (def ui-menu (interop/react-factory Menu))
 (def ui-menu-item (interop/react-factory MenuItem))
 
+(def sticky-bar (.getElementById js/document "stickyBar"))
+(def last-scroll-y (atom 0))
+
 (defsc Navigation [this props]
   {:initLocalState (fn [] {:services-anchor  nil
-                           :community-anchor nil})}
+                           :community-anchor nil})
+   :componentDidMount (fn []
+                        (.addEventListener js/window "scroll"
+                                           (fn []
+                                             (let [current-scroll-y (.-scrollY js/window)]
+                                               (if (and (> current-scroll-y 50) (> current-scroll-y @last-scroll-y))
+                                                 (do
+                                         ;; If scrolled down past 200px and scrolling down
+                                                   (.classList.add sticky-bar "fade-out")
+                                                   (.classList.remove sticky-bar "fade-in"))
+                                                 (do
+                                         ;; If scrolling up
+                                                   (.classList.add sticky-bar "fade-in")
+                                                   (.classList.remove sticky-bar "fade-out")))
+                                     ;; Update last-scroll-y
+                                               (reset! last-scroll-y current-scroll-y)))))}
   (let [{:keys [services-anchor community-anchor]} (comp/get-state this)]
-    (dom/nav {:style {:display "flex"
+    (dom/nav {:class "no-select sticky-bar"
+              :id "stickyBar"
+              :onMouseLeave      #(comp/set-state! this {:services-anchor nil})
+              :style {:display "flex"
+                      :position "sticky"
+                      :top 0
                       :flex-direction "row"
                       :alignItems "center"
                       :justifyContent "center"
-                      :padding "1.5rem"}}
+                      :padding "8px"
+                      :margin-bottom "1rem"}}
+             #_(dom/img {:class "select-none"
+                         :src "/images/top.svg"
+                         :style {:position "absolute"
+                                 :top 0
+                                 :z-index 0
+                                 :pointer-events "none"
+                                 :width "100vw"}})
              (l/stack {:direction "row"
                        :style {:width "85vw"
                                :alignItems "center"
@@ -46,38 +78,43 @@
                                 :alignItems     "center"
                                 :width "100%"
                                 :justifyContent "flex-start"}
-               ;; Logo
+                        ;; Logo
                                (dom/a {:style {:cursor       "pointer"
                                                :margin-right "2rem"}}
-                                      (dom/img {:style   {:width "6rem" :height "auto"}
+                                      (dom/img {:style   {:width "6rem" :height "auto" :drag false}
                                                 :src     "/images/w3t_one.jpg"
                                                 :onClick #(rroute/route-to! this landing-page/LandingPage {})}))
-                               (dom/div {}
+                               (dom/div {:onMouseOver      #(comp/set-state! this {:services-anchor (.-currentTarget %)})}
                                         (dom/span
-                                         {:className    "navbar-heading"
-                                          :aria-controls (when services-anchor "services-menu")
+                                         {:aria-controls (when services-anchor "services-menu")
                                           :aria-haspopup "true"
-                                          :style {:font-weight 700
-                                                  :font-style "bold"}
-                                          :onClick      #(comp/set-state! this {:services-anchor (.-currentTarget %)})}
+                                          :class (str "navbar-heading " (when (comp/get-state this :services-anchor) "navbar-heading-always"))
+                                          :style (conj {:font-weight 700
+                                                        :font-style "bold"})}
+
                                          "SERVICES")
-                                        (ui-menu {:id           "services-menu"
-                                                  :anchorEl     services-anchor
-                                                  :keepMounted  true
-                                                  :open         (boolean services-anchor)
-                                                  :onClose      #(comp/set-state! this {:services-anchor nil})}
-                                                 (ui-menu-item {:onClick #(do (rroute/route-to! this kubernetes-page/KubernetesPage {})
-                                                                              (comp/set-state! this {:services-anchor nil}))}
-                                                               "Kubernetes")
-                                                 (ui-menu-item {:onClick #(do (rroute/route-to! this devops-page/DevOpsPage {})
-                                                                              (comp/set-state! this {:services-anchor nil}))}
-                                                               "DevOps")
-                                                 (ui-menu-item {:onClick #(do (rroute/route-to! this datascience-page/DataSciencePage {})
-                                                                              (comp/set-state! this {:services-anchor nil}))}
-                                                               "Data Science")
-                                                 (ui-menu-item {:onClick #(do (rroute/route-to! this development-page/DevelopmentPage {})
-                                                                              (comp/set-state! this {:services-anchor nil}))}
-                                                               "Development"))))
+                                        (when (comp/get-state this :services-anchor)
+                                          (dom/div {:id           "services-menu"
+                                                    :anchorEl     services-anchor
+                                                    :style {:position "absolute"
+                                                            :top "4rem"}
+                                                    :keepMounted  true
+                                                    :onMouseLeave      #(comp/set-state! this {:services-anchor nil})
+                                                    :open         (boolean services-anchor)}
+                                                   (dom/a {:onClick #(do (rroute/route-to! this kubernetes-page/KubernetesPage {})
+                                                                         (comp/set-state! this {:services-anchor nil}))}
+                                                          "Kubernetes")
+                                                   (dom/a {:onClick #(do (rroute/route-to! this devops-page/DevOpsPage {})
+                                                                         (comp/set-state! this {:services-anchor nil}))}
+                                                          "DevOps")
+                                                   (dom/a {:onClick #(do (rroute/route-to! this datascience-page/DataSciencePage {})
+                                                                         (comp/set-state! this {:services-anchor nil}))}
+                                                          "Data Science")
+                                                   (dom/a {:onClick #(do (rroute/route-to! this development-page/DevelopmentPage {})
+                                                                         (comp/set-state! this {:services-anchor nil}))}
+                                                          "Development"))))
+                               (dom/a {:onClick #(rroute/route-to! this kubernetes-page/KubernetesPage {})}
+                                      (dom/span {:className "navbar-heading no-select"} "W8S")))
                       (l/stack {:direction      "row"
                                 :display "flex"
                                 :spacing        8
@@ -86,7 +123,7 @@
                                 :alignItems     "center"
                                 :justifyContent "flex-end"}
 
-                              ;; COMMUNITY Heading with MUI Menu
+                        ;; COMMUNITY Heading with MUI Menu
                                #_(dom/div {}
                                           (dom/span
                                            {:className    "navbar-heading"
@@ -94,7 +131,7 @@
                                             :aria-haspopup "true"
                                             :onClick      #(comp/set-state! this {:community-anchor (.-currentTarget %)})}
                                            "COMMUNITY")
-                                  ;; MUI Menu for COMMUNITY
+                            ;; MUI Menu for COMMUNITY
                                           (ui-menu {:id           "community-menu"
                                                     :anchorEl     community-anchor
                                                     :keepMounted  true
@@ -106,15 +143,14 @@
                                                    (ui-menu-item {:onClick #(do (rroute/route-to! this partnerships-page/PartnershipsPage {})
                                                                                 (comp/set-state! this {:community-anchor nil}))}
                                                                  "Partners")))
-                              ;; Other Links
+                        ;; Other Links
                                (dom/a {:onClick #(rroute/route-to! this blog-page/BlogListPage {})}
-                                      (dom/span {:className "navbar-heading"} "BLOG"))
+                                      (dom/span {:className "navbar-heading no-select"} "BLOG"))
                                #_(dom/a {:class   "navbar-link no-select"
                                          :style   {:color "#ebb871"}
                                          :onClick #(rroute/route-to! this team-page/TeamPage {})} "TEAM")
-                               (dom/a {:class   "navbar-link no-select"
-                                       :style   {:color "#ebb871"}
-                                       :onClick #(rroute/route-to! this contact-page/ContactPage {})} "WHO?"))))))
+                               (dom/a {:onClick #(rroute/route-to! this contact-page/ContactPage {})}
+                                      (dom/span {:className "navbar-heading no-select"} "WHO?")))))))
 
 
 (def ui-navigation (comp/factory Navigation))

@@ -22,6 +22,8 @@
    :initial-state (fn [{:keys [page] :as params}] {:page (or page "")})
    :route-segment ["team"]
    :will-enter (fn [app {:keys [] :as route-params}]
+                 (let [app-element (.getElementById js/document "app")]
+                   (.scrollTo app-element 0 0))
                  (dr/route-immediate [:component/id ::TeamPage]))}
   (g/container {:spacing 6}
                (g/item {:xs 3}
