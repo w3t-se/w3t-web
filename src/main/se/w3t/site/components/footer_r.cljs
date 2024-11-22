@@ -30,13 +30,13 @@
                                                    :direction "row"}
                                                   (dom/a {:href "https://twitter.com/w3t_se"}
                                                          (dom/img {:style {:width "auto" :height "3rem"}
-                                                                   :src "/images/twitter_black.svg"}))
+                                                                   :src (str img-url "twitter_black.svg")}))
                                                   (dom/a {:href "https://www.linkedin.com/company/w3t"}
                                                          (dom/img {:style {:width "auto" :height "3rem"}
-                                                                   :src "/images/linkedin_black.svg"}))
+                                                                   :src (str img-url "linkedin_black.svg")}))
                                                   (dom/a {:href "https://github.com/w3t-se"}
                                                          (dom/img {:style {:width "auto" :height "3rem"}
-                                                                   :src "/images/github_black.svg"})))
+                                                                   :src (str img-url "github_black.svg")})))
                                          (markdown/render {:body "**Red Hat® and OpenShift® are trademarks of Red Hat, Inc., registered in the United States and other countries.*"}))))))
 
 (def ui-footer (comp/factory Footer))

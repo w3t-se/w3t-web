@@ -16,6 +16,7 @@
             [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
             ["@mui/material/Menu" :default Menu]
             ["@mui/material/MenuItem" :default MenuItem]
+            [se.w3t.site.utils :as u]
             [mui.inputs :as i]
             [mui.layout :as l]
             [mui.layout.grid :as g]
@@ -26,28 +27,26 @@
 
 (def ui-menu (interop/react-factory Menu))
 (def ui-menu-item (interop/react-factory MenuItem))
-
-(def sticky-bar (.getElementById js/document "stickyBar"))
 (def last-scroll-y (atom 0))
 
 (defsc Navigation [this props]
   {:initLocalState (fn [] {:services-anchor  nil
                            :community-anchor nil})
    :componentDidMount (fn []
-                        (.addEventListener js/window "scroll"
-                                           (fn []
-                                             (let [current-scroll-y (.-scrollY js/window)]
-                                               (if (and (> current-scroll-y 50) (> current-scroll-y @last-scroll-y))
-                                                 (do
-                                         ;; If scrolled down past 200px and scrolling down
-                                                   (.classList.add sticky-bar "fade-out")
-                                                   (.classList.remove sticky-bar "fade-in"))
-                                                 (do
-                                         ;; If scrolling up
-                                                   (.classList.add sticky-bar "fade-in")
-                                                   (.classList.remove sticky-bar "fade-out")))
-                                     ;; Update last-scroll-y
-                                               (reset! last-scroll-y current-scroll-y)))))}
+                        (let [bar (.getElementById js/document "stickyBar")]
+                          (.addEventListener (.getElementById js/document "app") "scroll"
+                                             (fn [e]
+                                               (let [current-scroll-y (aget e "target" "scrollTop")]
+                                                 (if (> current-scroll-y 20)
+                                                   (do
+                                                     ;; If scrolled down past 200px and scrolling down
+                                                     (.classList.add bar "fade-out")
+                                                     (.classList.remove bar "fade-in"))
+                                                   (do
+                                                     ;; If scrolling up
+                                                     (.classList.add bar "fade-in")
+                                                     (.classList.remove bar "fade-out")))
+                                                 (reset! last-scroll-y current-scroll-y))))))}
   (let [{:keys [services-anchor community-anchor]} (comp/get-state this)]
     (dom/nav {:class "no-select sticky-bar"
               :id "stickyBar"
@@ -58,8 +57,9 @@
                       :flex-direction "row"
                       :alignItems "center"
                       :justifyContent "center"
-                      :padding "8px"
-                      :margin-bottom "1rem"}}
+                      :padding-top "2rem"
+                      :padding-bottom "2rem"
+                      :margin-bottom "2rem"}}
              #_(dom/img {:class "select-none"
                          :src "/images/top.svg"
                          :style {:position "absolute"
@@ -68,9 +68,9 @@
                                  :pointer-events "none"
                                  :width "100vw"}})
              (l/stack {:direction "row"
-                       :style {:width "85vw"
+                       :style {:min-width "85vw"
+                               :max-width 2048
                                :alignItems "center"
-
                                :justifyContent "center"}}
                       (l/stack {:direction      "row"
                                 :spacing        8
@@ -82,7 +82,7 @@
                                (dom/a {:style {:cursor       "pointer"
                                                :margin-right "2rem"}}
                                       (dom/img {:style   {:width "6rem" :height "auto" :drag false}
-                                                :src     "/images/w3t_one.jpg"
+                                                :src     (str u/img-url "w3t_one.jpg")
                                                 :onClick #(rroute/route-to! this landing-page/LandingPage {})}))
                                (dom/div {:onMouseOver      #(comp/set-state! this {:services-anchor (.-currentTarget %)})}
                                         (dom/span
@@ -94,23 +94,30 @@
 
                                          "SERVICES")
                                         (when (comp/get-state this :services-anchor)
-                                          (dom/div {:id           "services-menu"
+                                          (l/stack {:id           "services-menu"
                                                     :anchorEl     services-anchor
                                                     :style {:position "absolute"
-                                                            :top "4rem"}
+                                                            :padding "0.5rem"
+                                                            :border-radius "4px"
+                                                            :background-color "black"
+                                                            :top "6rem"}
                                                     :keepMounted  true
                                                     :onMouseLeave      #(comp/set-state! this {:services-anchor nil})
                                                     :open         (boolean services-anchor)}
-                                                   (dom/a {:onClick #(do (rroute/route-to! this kubernetes-page/KubernetesPage {})
+                                                   (dom/a {:class "navbar-heading"
+                                                           :onClick #(do (rroute/route-to! this kubernetes-page/KubernetesPage {})
                                                                          (comp/set-state! this {:services-anchor nil}))}
                                                           "Kubernetes")
-                                                   (dom/a {:onClick #(do (rroute/route-to! this devops-page/DevOpsPage {})
+                                                   (dom/a {:class "navbar-heading"
+                                                           :onClick #(do (rroute/route-to! this devops-page/DevOpsPage {})
                                                                          (comp/set-state! this {:services-anchor nil}))}
                                                           "DevOps")
-                                                   (dom/a {:onClick #(do (rroute/route-to! this datascience-page/DataSciencePage {})
+                                                   (dom/a {:class "navbar-heading"
+                                                           :onClick #(do (rroute/route-to! this datascience-page/DataSciencePage {})
                                                                          (comp/set-state! this {:services-anchor nil}))}
                                                           "Data Science")
-                                                   (dom/a {:onClick #(do (rroute/route-to! this development-page/DevelopmentPage {})
+                                                   (dom/a {:class "navbar-heading"
+                                                           :onClick #(do (rroute/route-to! this development-page/DevelopmentPage {})
                                                                          (comp/set-state! this {:services-anchor nil}))}
                                                           "Development"))))
                                (dom/a {:onClick #(rroute/route-to! this kubernetes-page/KubernetesPage {})}

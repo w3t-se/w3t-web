@@ -8,7 +8,7 @@
             [com.fulcrologic.fulcro.mutations :as m]
             [markdown-to-hiccup.core :as md]
             [sablono.core :as html :refer-macros [html]]
-            [se.w3t.site.utils :as utils]
+            [se.w3t.site.utils :as utils :refer [img-url]]
             [mui.layout :as l]
             [mui.layout.grid :as g]
             [se.w3t.site.markdown :as markdown]
@@ -31,12 +31,12 @@
                                       :top "8rem"
                                       :height "auto"}
                               :class "hover-effect"
-                              :src "/images/w8s_icon.svg"})
+                              :src (str img-url "w8s_icon.svg")})
                     (dom/img {:style {:height "2rem"
                                       :position "absolute"
                                       :top "13.5rem"
                                       :left "-0.3rem"}
-                              :src "/images/w8s_text.svg"})
+                              :src (str img-url "w8s_text.svg")})
                     (dom/div {:class  "svg-container"
                               :onClick #(rroute/route-to! this deploy-page/DeployPage {})
                               :style {:position "absolute"
@@ -44,7 +44,7 @@
                                       :left "16rem"}}
                              (dom/img {:style {:width "6rem"
                                                :height "auto"}
-                                       :src "/images/kube_deploy.svg"}))
+                                       :src (str img-url "kube_deploy.svg")}))
                     (dom/div {:class  "svg-container"
                               :style {:position "absolute"
                                       :top "12rem"
@@ -52,7 +52,7 @@
                               :onClick #(rroute/route-to! this deploy-page/DeployPage {})}
                              (dom/img {:style {:width "6rem"
                                                :height "auto"}
-                                       :src "/images/ocp_deploy.svg"})))))
+                                       :src (str img-url "ocp_deploy.svg")})))))
 
 (def ui-deploy (comp/computed-factory DeployThings {}))
 
@@ -77,7 +77,8 @@
                  (dr/route-immediate [:component/id ::KubernetesPage]))}
   (g/container {:spacing 6}
                (g/item {:xs 3}
-                       (dom/h2 {:style {:padding 0}} "KUBERNETES"))
+                       (dom/h2 {:style {:padding 0
+                                        :color "#a57aeb"}} "KUBERNETES"))
                (g/item {:xs 9}
                        (l/stack {:direction :row
                                  :jusifyContent :center
@@ -89,9 +90,11 @@
  operational expenses can be reduced.
  W3T has developed a packaged Kubernetes solution based on the most up to date Open Source tools from the [CNCF](https://www.cncf.io/) (Cloud Native Computing Foundtion).
 
-## W8S: a turn-key Kubernetes platform all included!
+## W8S: an all-inclusive, turn-key Kubernetes platform!
 
-W8S is a selection of the best OpenSource and Cloud Native technologies and is based on our long and varied experience Deploying, Operating and effectively using Kuberenetes in a multitude of Environments and customer Segments."}))
+W8S is a selection of the best OpenSource and Cloud Native technologies and is based on our long and varied experience Deploying, Operating and effectively using Kuberenetes in a multitude of Environments and customer Segments.
+
+"}))
                (g/item {:xs 3} "")
                (g/item {:xs 9}
                        (l/stack {:spacing 4}
@@ -135,11 +138,11 @@ For W8S we have selected the best and most feature rich Storage solution availab
  - Host-Level Exploits: Containers with access to host namespaces or file systems, increasing attack surface.
  - Insufficient Auditing: Inadequate monitoring and logging for security events."}))
                        (TabPanel {:value (comp/get-state this :tab)
-                                  :index 4} (dom/div {} ))
+                                  :index 4} (dom/div {}))
                        #_(markdown/render {:body " - Container storage: W8S
                                                  - Backup
  monitoring, alerting, and tracing, security features like policy management, image and runtime threat scanning, DevOps best practices (CI/CD, GitOps), SSO integrations for user administration, and container-optimized runtimes (Java, Node, Quarkus, etc.)."}))
                (g/item {:xs 12}
                        (dom/img {:style {:width "auto"
                                          :height "auto"}
-                                 :src "/images/w8s_slide.svg"}))))
+                                 :src (str img-url "w8s_slide.svg")}))))

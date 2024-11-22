@@ -27,12 +27,11 @@
 
   (g/container {:my 0
                 :spacing 5
-                :justifyContent :center
-                :alignItems :center}
+                :justifyContent :center}
 
                (g/item {:xs 3}
                        (dom/h2 {:style {:margin 0
-                                        :color "#e8a761"}} "PASSIONS"))
+                                        :color "#a57aeb"}} "PASSIONS"))
                (g/item {:xs 9})
 
                (g/item {:xs 12}
@@ -53,7 +52,7 @@ W3T strives to create **packaged solutions** from the latest Open Source compone
                                        :github "16pj"})))
                (g/item {:xs 3}
                        (dom/h2 {:style {:margin-bottom "2rem"
-                                        :color "#e8a761"}} "CONTACT")
+                                        :color "#a57aeb"}} "CONTACT")
 
                        #_(dom/iframe {:width 500 :height 400
                                       :style {:border 0}

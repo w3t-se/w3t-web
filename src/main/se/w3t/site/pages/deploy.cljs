@@ -7,7 +7,7 @@
             [com.fulcrologic.fulcro.mutations :as m]
             [markdown-to-hiccup.core :as md]
             [sablono.core :as html :refer-macros [html]]
-            [se.w3t.site.utils :as utils]
+            [se.w3t.site.utils :as utils :refer [md->html img-url]]
             [mui.layout :as l]
             [mui.layout.grid :as g]
             [se.w3t.site.markdown :as markdown]
@@ -55,12 +55,12 @@
                                                                    (when (= distro :kubernetes) {:border "1px solid"
                                                                                                  :border-color "blue"}))
                                                       :onClick #(comp/set-state! this {:distro :kubernetes})
-                                                      :src "/images/kubernetes.svg"})
+                                                      :src (str img-url "kubernetes.svg")})
                                             (dom/img {:style (conj {:width "auto" :height "6rem" :padding "1rem" :cursor "pointer"}
                                                                    (when (= distro :openshift) {:border "1px solid"
                                                                                                 :border-color "blue"}))
                                                       :onClick #(comp/set-state! this {:distro :openshift})
-                                                      :src "/images/OpenShift-LogoType.svg"}))
+                                                      :src (str img-url "OpenShift-LogoType.svg")}))
                                    (when distro
                                      (condp = selected
                                        :provider (comp/fragment {}
@@ -71,7 +71,7 @@
                                                                                                 (when (= cloud :gcp) {:border "1px solid"
                                                                                                                       :border-color "blue"}))
                                                                                    :onClick #(comp/set-state! this {:cloud :gcp})
-                                                                                   :src "/images/google-cloud.svg"})))
+                                                                                   :src (str img-url "google-cloud.svg")})))
                                        :features (dom/form {}
                                                            (dom/input {}))
                                        :details (comp/fragment {})
@@ -87,7 +87,7 @@
                                                                                     (when (contains? features :devops) {:border "1px solid"
                                                                                                                         :border-color "blue"}))
                                                                        :onClick #(comp/set-state! this {:features (conj features :devops)})
-                                                                       :src "/images/devops.svg"}))
+                                                                       :src (str img-url "devops.svg")}))
                                                     (dom/h4 {:style {:margin 0}} "Databases")
                                                     (l/stack {:direction "row"
                                                               :spacing 2}
@@ -95,7 +95,7 @@
                                                                                     (when (contains? features :psql) {:border "1px solid"
                                                                                                                       :border-color "blue"}))
                                                                        :onClick #(comp/set-state! this {:features (conj features :psql)})
-                                                                       :src "/images/psql_logo.svg"}))))
+                                                                       :src (str img-url "psql_logo.svg")}))))
                                    (when (and selected cloud)
                                      (dom/button {:type "submit"
                                                   :class "button-9"} "Deploy!")))))))

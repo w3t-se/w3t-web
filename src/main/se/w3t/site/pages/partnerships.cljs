@@ -30,13 +30,13 @@
                 (g/item {:xs 3}
                         (dom/img {:style {:width "auto" :height "6rem"
                                           :margin-left "1rem"}
-                                 :src "/images/Logo-Red_Hat-Ready-Business_Partner-Solution_Provider-A-Reverse-RGB.svg"}))
+                                  :src (str "Logo-Red_Hat-Ready-Business_Partner-Solution_Provider-A-Reverse-RGB.svg")}))
                 (g/item {:xs 8}
                         (markdown/render {:body "We are an official Red Hat®* Partner within the Solution Provider area. We specialize in Kubernetes and specifically Red Hat® OpenShift®. Red Hat® has a prominent Partner Program and perform most of Solution Deployments via Partners. [Official Profile Pages](https://redhat.secure.force.com/finder/PFPartnerDetail?id=0013a00001qXOf8AAG)"}))
                 (g/item {:xs 3}
                         (dom/a {:href "https://www.parallelconsulting.com/"}
-                         (dom/img {:style {:width "auto" :height "6rem"
-                                           :margin-left "2rem"}
-                                   :src "/images/parallel.jpeg"})))
+                               (dom/img {:style {:width "auto" :height "6rem"
+                                                 :margin-left "2rem"}
+                                         :src "/images/parallel.jpeg"})))
                 (g/item {:xs 8}
                         (markdown/render {:body "Parallel Consulting offer Services within their core areas Data, Infrastructure and Software Development and are active in the UK, USA, Netherlands and the Nordics. [Parallel Consulting](https://www.parallelconsulting.com/)"})))))

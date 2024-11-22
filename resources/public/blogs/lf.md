@@ -1,0 +1,3 @@
+In the rapidly evolving insurance industry, agility and efficiency are key. We embarked on a project to containerize [Lumera](https://lumera.com/en/), one of Sweden's most widely used insurance platforms, enabling it to run seamlessly on OpenShift. This transformation has significantly accelerated test automation and streamlined environment management for our client.
+
+By leveraging containerization, we helped the organization reduce deployment times and improve scalability. The move to OpenShift has also provided better resource utilization and enhanced security features, aligning with the company's long-term strategic goals.

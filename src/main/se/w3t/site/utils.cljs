@@ -6,7 +6,7 @@
             [sablono.core :as html :refer-macros [html]]
             [cljs.core.async :refer [<!]]))
 
-(def img-url "https://ipfs.fleek.co/ipfs/QmVsvcutYw99NTdojxGUX2tQ4DJJeoEfWGTA2ZHhpCBd9u/")
+(def img-url "https://bafybeiedqglyvbcyp6vsrggiqrjypsfleb4t4fillsdj4tvnmq5jsjszuy.ipfs.flk-ipfs.xyz/")
 
 (defn md->html [md-string]
   (html
