@@ -24,7 +24,7 @@
 
 (defmutation load-blog [{:keys [id]}]
   (action [{:keys [app state]}]
-          (.then (js/fetch (str "/blogs/" id ".md"))
+          (.then (js/fetch (str "https://www.w3t.se/" "blogs/" id ".md"))
                  (fn [res]
                    (.then (.text res)
                           (fn [text]

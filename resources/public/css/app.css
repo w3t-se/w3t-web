@@ -183,7 +183,7 @@ h1,h2 {
   left: -50px;   /* Adjust to move the image to the left */
   width: calc(100% + 100px);   /* Extend the width */
   height: calc(100% + 1000px);  /* Extend the height */
-  background-image: url('/images/drawing.svg');
+  background-image: url('https://bafybeiedqglyvbcyp6vsrggiqrjypsfleb4t4fillsdj4tvnmq5jsjszuy.ipfs.flk-ipfs.xyz/drawing.svg');
   background-repeat: no-repeat;
   background-size: cover;   /* Adjust as needed */
   z-index: -1;              /* Place it behind the container content */
@@ -202,7 +202,7 @@ h1,h2 {
   width: calc(100%);   /* Extend the width */
   height: calc(20vh);  /* Extend the height */
   background-attachment: scroll; /* Prevents fixed position */
-  background-image: url('/images/top.svg');
+  background-image: url('https://bafybeiedqglyvbcyp6vsrggiqrjypsfleb4t4fillsdj4tvnmq5jsjszuy.ipfs.flk-ipfs.xyz/top.svg');
   background-repeat: no-repeat;
   background-size: cover;   /* Adjust as needed */
   z-index: -1;              /* Place it behind the container content */
