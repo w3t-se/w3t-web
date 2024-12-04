@@ -14,10 +14,15 @@
 
 (defonce app (with-react18 (app-default/fulcro-app {})))
 
+(defn path-segments [location]
+  (into [] (remove empty? (js->clj (-> (.-pathname (js/URL. (.-href location)))
+                                       (.split "/"))))))
+
+
 (comment 
   (map #(merge/merge-component! app BlogEntry (comp/get-initial-state BlogEntry %)
-                                               :append [:component/id :se.w3t.site.pages.blog/Blog :blogs])
-               blogs))
+                                :append [:component/id :se.w3t.site.pages.blog/Blog :blogs])
+       blogs))
 
 (defn ^:export init
   "Shadow-cljs sets this up to be our entry-point function. See shadow-cljs.edn `:init-fn` in the modules of the main build."
@@ -25,10 +30,8 @@
 
   (app-default/set-root! app Root {:initialize-state? true})
   (dr/initialize! app)
-  
-  (dr/change-route! app ["home"])
+  (dr/change-route! app (path-segments js/window.location))
   (history/install-route-history! app (html5-history))
-
   (app-default/mount! app Root "app" {:initialize-state? false}))
 
 (defn ^:export refresh

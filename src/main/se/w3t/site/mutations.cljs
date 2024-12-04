@@ -3,6 +3,7 @@
   (:require [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
             [com.fulcrologic.fulcro.algorithms.merge :as merge]
             [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
+            [com.fulcrologic.fulcro.routing.dynamic-routing :as dr]
             [se.w3t.site.utils :as utils]
             [cljs-http.client :as http]
             [cljs.core.async :refer [<!]]
@@ -24,9 +25,8 @@
 
 (defmutation load-blog [{:keys [id]}]
   (action [{:keys [app state]}]
-          (.then (js/fetch (str "https://www.w3t.se/" "blogs/" id ".md"))
+          (.then (js/fetch (str "https://www.w3t.se/blogs/" id ".md"))
                  (fn [res]
                    (.then (.text res)
                           (fn [text]
-                            (js/console.log "res:" text)
                             (swap! state assoc-in [:blog/id id :blog/content] text)))))))

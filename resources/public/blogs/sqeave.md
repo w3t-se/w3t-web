@@ -1,70 +1,63 @@
 <a id="intro"></a>
 We are excited to unveil Sqeave, a new framework that bridges the gap between ClojureScript and Solid-js using Squint-cljs. Sqeave aims to simplify the development of reactive web applications by combining the expressiveness of ClojureScript with the performance benefits of Solid-js.
 
-Solid-js is known for its fine-grained reactivity and high performance, but integrating it with ClojureScript hasn't always been straightforward. Sqeave addresses this by providing seamless interop, allowing developers to write idiomatic ClojureScript code while leveraging Solid-js's powerful features.
+Solid-js is known for its fine-grained reactivity and high performance. With Sqeave you can write idiomatic ClojureScript (via Squint-cljs) code while leveraging Solid-js's powerful features.
 
 So how do you use Sqeave? Let's start.
 
-Clone the sqeave repo:
-
+The quickest is to simply run the starting template:
 ``` bash
-git clone git@github.com:w3t-se/sqeave.git
+ pnpm create @w3t-ab/sqeave@latest
 ```
-Install dependencies and start the vite based dev server:
+
+This will set up the main folder structure and install dependencies. Now start the vite based dev server:
 ``` bash
-cd sqeave/template && pnpm i && pnpx vite
+cd sqeave-app && pnpx vite
 ```
 you should see a browser window at http://localhost:5173.
 
-Now, the main entrypoint of the application is in src/main/main.cljs:
-
+Now, the main entrypoint of the application is in src/main/index.cljs:
 <a id="main component"></a>
 ``` clojure
 (ns main
-  (:require ["@w3t-ab/sqeave/comp" :as comp]
-            ["./Context.cljs" :refer [AppContext]])
-  (:require-macros [comp :refer [defc def-factory]]))
+  (:require ["@w3t-ab/sqeave" :as sqeave])
+  (:require-macros [sqeave :refer [defc]]))
 
-(defc Main [this {:click/keys [id count] :or {id (comp/uuid) count 0}}]     ; 1, 2
+(defc Main [this {:main/keys [id count] :or {id 0 count 0}}]                ; 1, 2
   #jsx [:div {} "Hello Sqeave: "                                            ; 3
-        [:button {:onClick #(comp/set! this :click/count (inc (count)))}
+        [:button {:onClick #(sqeave/set! this :main/count (inc (count)))}
           "Plus"]                                                           ; 4
         [:p {} "Count: " (count)]])                                         ; 5
-
-(def-factory UiMain Main AppContext MainFn)                                 ; 6
 ```
 
 1. The `defc` macro is the starting point for any Sqeave component. This macro creates a class and wraps the component's data, ident and query.
-2. The query is defined by the component's signature `{:click/keys [id count]}`. This means that this component will pull it's data (using Edn Query Language-syntax) from the normalized top level App state. The ident is automatically parsed from the query as: `[:click/id id]` in this case. The ident is set when this component is added to the render
+2. The query is defined by the component's signature `{:click/keys [id count]}`. This means that this component will pull its data (using [Edn Query Language-syntax](https://edn-query-language.org/eql/1.0.0/what-is-eql.html)) from the normalized top level App state. The ident is automatically parsed from the query as: `[:click/id id]` in this case. The ident is set when this component is added to the render function somewhere in the DOM (by mounting the component via the Root component as you typically mount React/Solid-js components).
 3. The component's render function. The #jsx directive tells the Squint compiler to ouput jsx.
-4. We are using the conveniance mutation function: comp/set! to update the App state. In this case this translate to reset!-ing the app state atom at `[:click/id id :click/count]`.
+4. We are using the conveniance mutation function: `comp/set!` to update the App state. In this case this translates to `*reset!`-ing the app state atom at `[:click/id id :click/count]`.
 5. The rendered data is specified as a function `()` since it is a solid-js signal. Any set! or transactions towards the App state affecting the data at `[:click/id id :click/count]` will automatically cause the `(count)` to re-render.
-6. We create a factory for this class such that it can be used (within the render functions) of other Components in the UI-tree.
 
 The main entrypoint of the application is another Component "Root" defined in `src/main/index.cljs`:
 <a id="root component"></a>
 ``` clojure
 (ns index
-  (:require ["solid-js/web" :refer [render]]
-            ["solid-js/store" :refer [createStore]]
-            ["@w3t-ab/sqeave/comp" :as comp]
-            ["./Context.cljs" :refer [AppContext]]
-            ["./main.cljs" :refer [UiMain]])
-  (:require-macros [comp :refer [defc def-factory]]))
+  (:require ["solid-js" :refer [createContext]]
+            ["solid-js/web" :refer [render]]
+            ["@w3t-ab/sqeave" :as sqeave]
+            ["./main.cljs" :refer [Main]])
+  (:require-macros [sqeave :refer [defc]]))
 
-(defc Root [this {:keys []}]                                                ; 1
-  (let [[store setStore] (createStore {:click/id {0 {:click/id 0            ; 2
-                                                     :click/count 0}}})]
-    #jsx [AppContext.Provider {:value {:store store :setStore setStore}}    ; 3
-          [UiMain {:ident [:click/id 0]}]]))                                ; 4
+(def AppContext (createContext))                                            ; 1
 
-(def-factory UiRoot Root AppContext RootFn)
+(defc Root [this {:keys [] :or {} :ctx (sqeave/init-ctx! AppContext)}]      ; 2
+  #jsx [AppContext.Provider {:value this.ctx}                               ; 3
+        [Main {:ident [:main/id 0]}]])                                      ; 4
 
-(render UiRoot (js/document.getElementById "root"))                         ; 5
+(let [e (js/document.getElementById "root")]                                ; 5
+  (set! (aget e :innerHTML) "")
+  (render Root e))
 ```
 
-1. The root component's query is in this case emtpy since usually we just want to add entrypoints to sub components here
-2. The root component contains the App state via a store always initiated with createStore.
+1. The root component's query is in this case emtpy since usually we just want to add entrypoints to sub components for Root. The root component contains the App state via a store always initiated with sqeave/init-ctx! (which is just a wrapper around solid-js createStore. In this case it is added via the special key :ctx in the Component signature and is then added to the Contect in 3.
 3. The store is added to the AppContext.
 4. The Main component is used as the (only) thing rendered within the root component. Notice that this is where we set the Main component's ident as `[:click/id 0]`.
 5. The default solid-js render function to mount the Root in the root element. The root element is a div with id="root" defined in the vite index.html entrypoint.
@@ -120,10 +113,9 @@ this is a basic recursive traverse function that normalizes incoming data. Simil
 
     :else (get entity query)))
 ```
-This code is probably completely incomprehensible but is basically implements a very basic `pull` EDN-query language which reconstructs . This function is used to pull all the data that a component needs (but this is added automatically when using `defc`).
+This code is probably completely incomprehensible but basically implements a very basic EDN-`pull` query for selecting data in a normalized database. This is the database that is added in the `ctx` of all Sqeave Components. This function is used to pull all the data that a component needs via the component query (this is the basic state management loop which is added automatically when using `defc` and using sqeave mutation funnctions explain below).
 
 The `defc` macro (defined in `sqeave/src/main/comp.cljc`), arguably one of the ugliest pieces of code ever written but it works quite well in defining components:
-
 ```clojure
 (defmacro defc [name bindings body]
   (let [ntmp (str name)
@@ -133,7 +125,7 @@ The `defc` macro (defined in `sqeave/src/main/comp.cljc`), arguably one of the u
         val-vec (mapv #(if (map? %) (first (keys %)) %) params)
         val-vec (mapv strip-ns val-vec)
 
-        keywordify (fn [x] (keyword (str (if n (str n "/")) x)))
+        keywordify (fn [x] (keyword (str (when n (str n "/")) x)))
 
         or-map (let [m (-> bindings second :or)]
                  (zipmap (mapv keywordify (keys m)) (vals m)))
@@ -143,53 +135,57 @@ The `defc` macro (defined in `sqeave/src/main/comp.cljc`), arguably one of the u
 
         query (mapv #(if (map? %)
                        {(keywordify (first (keys %))) (first (vals %))}
-                       (keywordify %)) params)]
+                       (keywordify %)) params)
+
+        binding-ctx (:ctx (second bindings))]
 
     (list 'do
           (list 'defn (symbol (str name "Fn")) [{:keys (conj val-vec 'this 'props 'ctx)}] body)
 
-          (list 'defclass name
-                (list 'extends `Comp)
+          (list 'defclass (symbol (str name "Class"))
+                (list 'extends 'sqeave/Comp)
 
                 (list (with-meta 'field {:static true}) 'query query)
 
                 (list 'field 'local)
                 (list 'field 'set-local!)
 
-                (list 'constructor ['this# 'ctx] (list 'println "constructor: " ntmp)
+                (list 'constructor ['this# 'ctx] (list 'sqeave/debug "constructor: " ntmp " ctx: " 'ctx)
                       (list 'super 'ctx)
 
                       (list 'set! 'this#.render 'this#.constructor.prototype.render)
-                      (list 'set! 'this#.new-data 'this#.constructor.new-data))
+                      (list 'set! 'this#.new-data 'this#.constructor.new-data)
+
+                      #_(list 'set! 'this#.render 'this#.constructor.render))
 
                 'Object
-                (list (with-meta 'new-data {:static true}) ['_ '& 'data] (list 'let ['v (list 'vals or-map)
-                                                                                     'k (list 'keys or-map)]
-                                                                               (list 'merge or-map (list 'or (list 'first 'data) {}))))
+                (list (with-meta 'new-data {:static true}) ['_ 'data] (list 'merge or-map 'data))
 
                 (list 'render ['this# 'body 'props]
                       (list 'let [(first bindings) 'this#
-                                  'ctx (list `useContext 'this#.ctx)
+                                  'a (list 'sqeave/debug "render: " ntmp " props: " 'props)
+                                  'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
                                   'ident (list 'get 'props :ident)
                                   'ident (list 'if-not (list 'fn? 'ident) (list 'fn [] 'ident) 'ident)
+                                  'ident (list 'if (list nil? (list 'ident)) (list 'fn [] []) 'ident)
+                                  'a (list 'sqeave/debug ntmp ": p " 'props " i: " (list 'ident) " q: " query " ctx:" 'ctx)
+                                  'a (list 'set! 'this#.ident 'ident)
                                   {:keys ['store 'setStore]} 'ctx
-                                  'data (list 'if (list 'comp/ident? (list 'ident))
+                                  'a (list 'sqeave/add! 'ctx (list 'this#.new-data))
+                                  'data (list 'if (list 'or (list 'and (list 'vector? (list 'ident)) (list '= (list 'count (list 'ident)) 0))
+                                                        (list 'sqeave/ident? (list 'ident)))
                                               (list 'do
-                                                    (list 'set! 'this#.ident 'ident)
-                                                    (list `createMemo (list 'fn []
-                                                                            (list 'println "memo: " ntmp " ident: " (list 'ident) " query: " query)
-                                                                            (list 'let ['data (list `pull 'store (list 'ident) query)
-                                                                                        #_(list 'if n
-                                                                                                (list `pull 'store (list 'ident) query)
-                                                                                                (list `pull 'store 'store query) ; multiple query entries pull from root
-                                                                                                )]
-                                                                                  (list 'println "data: " `data)
-                                                                                  (list 'merge or-map (list 'or 'data {}))))))
+                                                    (list 'sqeave/createMemo (list 'fn []
+                                                                                   (list 'sqeave/debug "memo: " ntmp " ident: " (list 'ident) " query: " query)
+                                                                                   (list 'let ['data (list 'sqeave/pull 'store (list 'if (list 'empty? (list 'ident))
+                                                                                                                                     'store (list 'ident)) query)]
+                                                                                         (list 'sqeave/debug "data: " 'data)
+                                                                                         (list 'merge or-map 'data)))))
                                               (list 'fn [] 'props))
-                                  val-vec (mapv #(list `createMemo (list 'fn [] (list % (list 'data)))) (mapv keywordify val-vec))
+                                  val-vec (mapv #(list 'sqeave/createMemo (list 'fn [] (list % (list 'data)))) (mapv keywordify val-vec))
 
-                                  ['local 'setLocal] (list `createSignal local-map)]
-                            (list 'set! 'this#.-ctx 'ctx)
+                                  ['local 'setLocal] (list 'sqeave/createSignal local-map)]
+                            (list 'set! 'this#.ctx 'ctx)
                             (list 'set! 'this#.local 'local)
                             (list 'set! 'this#.data 'data)
                             (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))
@@ -202,10 +198,13 @@ The `defc` macro (defined in `sqeave/src/main/comp.cljc`), arguably one of the u
                                                    body
                                                    'children] body))))
 
-          #_(list 'def name {:cla (symbol name) :body (symbol (str name "Fn"))})
-
-          #_(list 'defn (symbol (str name "new")) ['props] (list 'let ['c (list new (str name "class"))]
-                                                                 (list .render 'c (symbol (str name "fn")) 'props))))))
+          (list 'defn name ['props] (list 'let ['c (list 'new (symbol (str name "Class")) 'sqeave/AppContext)]
+                                          (list '.render 'c (symbol (str name "Fn")) 'props))))))
 ```
-it is worth mentioning that `squint-cljs` supports "real" macros in the sense that they have to be compiled before runtime. Squint uses Sci for this but this is automatically performed when we use the handy `vite-plugin-squint`.
-``
+it is worth mentioning that `squint-cljs` supports "real" macros in the sense that they have to be compiled before runtime. Squint uses Sci for this but this is automatically performed when we use the handy `vite-plugin-squint` plugin set up in `vite.config.js`.
+
+So the main usage of Sqeave is the easy definition of components which pull their data and automatically create and update the data signals in the defc signature!
+
+Now, we are continuously adding features to Sqeave such as connectors to Databases and automtic Schema creation etc. This is only an alpha version focusing on the basics of State management. Stay tuned for more updates and examples on how to use Sqeave in a real fullstack App!
+
+Thank you (and now got back to building stuff)!

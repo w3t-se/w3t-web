@@ -22,10 +22,11 @@
    :will-enter (fn [app {:keys [] :as route-params}]
                  (let [app-element (.getElementById js/document "app")]
                    (.scrollTo app-element 0 0))
-                 (comp/transact! app [`(se.w3t.site.mutations/load-blogs)])
-                 ;; (when-let  [blog-id (some-> blog-id (js/parseInt))]
-                 ;;   (swap! (:com.fulcrologic.fulcro.application/state-atom app) assoc-in [:component/id ::BlogPage :active-blog blog-id]))
-                 (dr/route-immediate [:component/id ::BlogListPage]))}
+                 (dr/route-deferred
+                  [:component/id ::BlogListPage]
+                  (fn []
+                    (comp/transact! app `[(se.w3t.site.mutations/load-blogs)
+                                          (dr/target-ready ~{:target [:component/id ::BlogListPage]})] {:parallel? false}))))}
   (dom/div {:style {:display "flex"
                     :flex-direction "column"}}
    #_(g/container {:spacing 1}

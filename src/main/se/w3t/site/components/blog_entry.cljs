@@ -24,12 +24,13 @@
    :ident         :blog/id
    :route-segment ["blog" :blog-id]
    :will-enter (fn [app {:keys [blog-id] :as route-params}]
-                 (comp/transact! app `[(se.w3t.site.mutations/load-blog ~{:id blog-id})])
-                 ;; (when-let  [blog-id (some-> blog-id (js/parseInt))]
-                 ;;   (swap! (:com.fulcrologic.fulcro.application/state-atom app) assoc-in [:component/id ::BlogPage :active-blog blog-id]))
                  (let [app-element (.getElementById js/document "app")]
                    (.scrollTo app-element 0 0))
-                 (dr/route-immediate [:blog/id blog-id]))
+                 (dr/route-deferred
+                  [:blog/id blog-id]
+                  (fn []
+                    (comp/transact! app `[(se.w3t.site.mutations/load-blog ~{:id blog-id})
+                                          (dr/target-ready ~{:target [:blog/id blog-id]})] {:parallel? false}))))
    :initial-state (fn [{:keys [id type date heading first-paragraph image reading-time content sections author tags] :as params}] {:blog/id id
                                                                                                                                    :blog/date date
                                                                                                                                    :blog/type type

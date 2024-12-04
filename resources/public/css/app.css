@@ -134,7 +134,7 @@ h1,h2 {
     --tw-bg-opacity: 0;
     /* background-color: rgb(243 244 246/var(--tw-bg-opacity)); */
     height: 0.25rem;
-    width: 0.35rem;
+    width: 0.5rem;
 }
 .dark ::-webkit-scrollbar-thumb {
     --tw-border-opacity: 1;
@@ -194,13 +194,13 @@ h1,h2 {
   /* Other styles */
 }
 
-.container2::before {
+.container2::after {
   content: '';
   position: absolute;
   top: 0;
-  opacity: 1;
+  top: -600px;
   width: calc(100%);   /* Extend the width */
-  height: calc(20vh);  /* Extend the height */
+  height: calc(100%);  /* Extend the height */
   background-attachment: scroll; /* Prevents fixed position */
   background-image: url('https://bafybeiedqglyvbcyp6vsrggiqrjypsfleb4t4fillsdj4tvnmq5jsjszuy.ipfs.flk-ipfs.xyz/top.svg');
   background-repeat: no-repeat;
