@@ -25,8 +25,10 @@
 
 (defmutation load-blog [{:keys [id]}]
   (action [{:keys [app state]}]
-          (.then (js/fetch (str "https://www.w3t.se/blogs/" id ".md"))
-                 (fn [res]
-                   (.then (.text res)
-                          (fn [text]
-                            (swap! state assoc-in [:blog/id id :blog/content] text)))))))
+          (let [b (blog-entries/blogs)]
+            (merge/merge-component! app BlogEntry (comp/get-initial-state BlogEntry (first (filterv #(= (:id %) id) b))))
+            (.then (js/fetch (str "https://www.w3t.se/blogs/" id ".md"))
+                   (fn [res]
+                     (.then (.text res)
+                            (fn [text]
+                              (swap! state assoc-in [:blog/id id :blog/content] text))))))))

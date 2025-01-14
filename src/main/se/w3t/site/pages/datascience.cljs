@@ -22,7 +22,7 @@
                  (dr/route-immediate [:component/id ::DataSciencePage]))}
   (g/container {:spacing 6}
                (g/item {:xs 3}
-                       (dom/h2 {:style {:color "#e8a761"}} "DATA"))
+                       (dom/h2 {:style {:color "#ffa500ff"}} "DATA"))
                (g/item {:xs 8}
                        (dom/img {:style {:width "800px" :height "300px"
                                          :object-fit "cover"

@@ -24,7 +24,7 @@
                  (dr/route-immediate [:component/id ::DevOpsPage]))}
   (g/container {:spacing 6}
                (g/item {:xs 3}
-                       (dom/h2 {:style {:color "#e8a761"}} "DEVOPS"))
+                       (dom/h2 {:style {:color "#ffa500ff"}} "DEVOPS"))
                (g/item {:xs 8}
                        (l/stack {:direction :row
                                  :jusifyContent :center

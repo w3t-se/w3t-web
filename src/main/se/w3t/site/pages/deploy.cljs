@@ -35,8 +35,8 @@
     (g/container {:spacing 6
                   :style {:min-height "70vh"}}
                  (g/item {:xs 3}
-                         (dom/h2 {:class "navbar-heading"
-                                  :style {:padding 0}} "DEPLOY")
+                         (dom/h2 {:style {:margin 0
+                                          :color "#ffa500ff"}} "DEPLOY")
                          (l/stack {:spacing 2
                                    :style {:margin-top "2rem"}}
                                   (for [s ["Provider" "Features" "Details"]]
@@ -97,5 +97,7 @@
                                                                        :onClick #(comp/set-state! this {:features (conj features :psql)})
                                                                        :src (str img-url "psql_logo.svg")}))))
                                    (when (and selected cloud)
+                                     (dom/div {:class "flex flex-row gap-1.5"}
                                      (dom/button {:type "submit"
-                                                  :class "button-9"} "Deploy!")))))))
+                                                  :class "button-9"} "Deploy!")
+                                     (dom/span {} "(Sorry! Coming soon). In the meantime please reach out to us at sales@w3t.se with your desired options and contact details. We will deploy your desired configuration as swiftly as possible."))))))))

@@ -11,6 +11,7 @@
             [se.w3t.site.pages.contact :refer [ContactPage]]
             [se.w3t.site.pages.team :refer [TeamPage]]
             [se.w3t.site.pages.blog :refer [BlogListPage]]
+            [se.w3t.site.pages.blockchain :refer [BlockchainPage]]
             [se.w3t.site.components.blog-entry :refer [BlogEntry]]
             [se.w3t.site.pages.partnerships :refer [PartnershipsPage]]
             [se.w3t.site.pages.deploy :refer [DeployPage]]
@@ -24,7 +25,7 @@
 
 (defrouter MainRouter [this {:keys [current-state route-factory route-props]}]
   {:always-render-body? true
-   :router-targets      [LandingPage DevOpsPage DataSciencePage DevelopmentPage KubernetesPage CodoPage ContactPage BlogListPage BlogEntry TeamPage PartnershipsPage DeployPage]
+   :router-targets      [LandingPage DevOpsPage DataSciencePage DevelopmentPage KubernetesPage CodoPage ContactPage BlogListPage BlogEntry TeamPage PartnershipsPage DeployPage BlockchainPage]
    :initLocalState (fn [] {:opacity 1
                            :scroll-y 0})
    :componentDidMount (fn [this]

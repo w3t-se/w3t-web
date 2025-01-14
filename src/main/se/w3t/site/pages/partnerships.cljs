@@ -25,7 +25,7 @@
    (g/container {:spacing 6
                  :alignItems "center"}
                 (g/item {:xs 3}
-                        (dom/h2 {:style {:color "#ebb871"}} "PARTNERS"))
+                        (dom/h2 {:style {:color "#ffa500ff"}} "PARTNERS"))
                 (g/item {:xs 8})
                 (g/item {:xs 3}
                         (dom/img {:style {:width "auto" :height "6rem"

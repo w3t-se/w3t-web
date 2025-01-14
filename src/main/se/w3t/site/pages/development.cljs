@@ -21,7 +21,7 @@
                  (dr/route-immediate [:component/id ::DevelopmentPage]))}
   (g/container {:spacing 6}
                (g/item {:xs 3}
-                       (dom/h2 {:style {:color "#e8a761"}} "DEVELOPMENT"))
+                       (dom/h2 {:style {:color "#ffa500ff"}} "DEVELOPMENT"))
                (g/item {:xs 8}
                        (l/stack {:direction :row
                                  :jusifyContent :center

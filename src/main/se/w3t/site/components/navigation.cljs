@@ -8,6 +8,7 @@
             [se.w3t.site.pages.development :as development-page]
             [se.w3t.site.pages.codo :as codo-page]
             [se.w3t.site.pages.kubernetes :as kubernetes-page]
+            [se.w3t.site.pages.blockchain :as blockchain-page]
             [se.w3t.site.pages.contact :as contact-page]
             [se.w3t.site.pages.w8s :as w8s-page]
             [se.w3t.site.pages.team :as team-page]
@@ -104,14 +105,19 @@
                                                     :keepMounted  true
                                                     :onMouseLeave      #(comp/set-state! this {:services-anchor nil})
                                                     :open         (boolean services-anchor)}
+
                                                    (dom/a {:class "navbar-heading"
                                                            :onClick #(do (rroute/route-to! this kubernetes-page/KubernetesPage {})
                                                                          (comp/set-state! this {:services-anchor nil}))}
-                                                          "Kubernetes")
+                                                     "Kubernetes")
+                                                   (dom/a {:class "navbar-heading"
+                                                           :onClick #(do (rroute/route-to! this blockchain-page/BlockchainPage {})
+                                                                         (comp/set-state! this {:services-anchor nil}))}
+                                                          "Web3 and Blockchain")
                                                    (dom/a {:class "navbar-heading"
                                                            :onClick #(do (rroute/route-to! this devops-page/DevOpsPage {})
                                                                          (comp/set-state! this {:services-anchor nil}))}
-                                                          "DevOps")
+                                                     "DevOps")
                                                    (dom/a {:class "navbar-heading"
                                                            :onClick #(do (rroute/route-to! this datascience-page/DataSciencePage {})
                                                                          (comp/set-state! this {:services-anchor nil}))}
