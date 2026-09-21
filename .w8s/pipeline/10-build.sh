@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # w8s-image: clojure:temurin-21-tools-deps-bookworm
+# w8s-cache: /root/.m2, /root/.npm, /var/cache/apt/archives
 #
 # Compiles the site and leaves it in $W8S_ARTIFACTS. This step produces an
 # artifact; it does not produce an image. What the image *is* - the nginx
@@ -15,13 +16,25 @@ set -euo pipefail
 cd "${W8S_WORKSPACE}"
 
 # shadow-cljs needs node beside the clojure toolchain. This was a cached
-# RUN layer in the Dockerfile and is a real cost here - it runs every
-# build. The fix is a prepared builder image with both, not a cache: see
-# the note in image.yaml.
+# RUN layer in the Dockerfile, and it runs on every build here. The
+# `w8s-cache` header above keeps the downloads - the .debs, the Maven
+# repository and the npm cache - so a rebuild fetches nothing it already
+# has. It does not avoid unpacking the packages again; only a prepared
+# builder image with node already in it would, and that is worth doing
+# separately.
+#
+# apt wants its partial directory, which an empty cache volume does not
+# have on the first run.
+mkdir -p /var/cache/apt/archives/partial
 apt-get update
 apt-get install -y --no-install-recommends nodejs npm
+# Not `rm -rf /var/cache/apt/archives` - that is the cache now. The lists
+# are not cached, so clearing them is still just tidiness.
 rm -rf /var/lib/apt/lists/*
 
+# Both read and write their default cache location, which is what the
+# header names: ~/.npm for npm, ~/.m2 for the Maven repository tools-deps
+# resolves into.
 npm ci --no-audit --no-fund
 clojure -A:dev -P
 npx shadow-cljs release main
