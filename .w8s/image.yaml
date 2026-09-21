@@ -1,0 +1,23 @@
+# What this repository's build produces.
+#
+# Declared once, here, rather than as a stage in a Dockerfile: no step in
+# the pipeline needs to run anything *inside* this image, so nothing has to
+# build one. w8s appends the artifacts to the base as a single layer and
+# pushes the result. The base's own layers are referenced, never unpacked,
+# so a build costs memory proportional to the site, not to nginx.
+#
+# Converted from the second stage of .w8s/pipeline/10-build.Dockerfile.
+from: nginxinc/nginx-unprivileged:1.27-alpine
+
+copy:
+  # shadow-cljs release output, staged by 10-build.sh.
+  /artifacts/site: /usr/share/nginx/html
+  # Was a `RUN printf` in the Dockerfile's final stage.
+  /artifacts/nginx/default.conf: /etc/nginx/conf.d/default.conf
+
+expose:
+  - "8080"
+
+# No cmd, entrypoint, user or workdir: nginx-unprivileged already sets all
+# of them, and the assembled image inherits its config. Restating them here
+# would be a second source of truth that silently drifts from the base.
