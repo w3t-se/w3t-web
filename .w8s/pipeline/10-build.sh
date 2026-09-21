@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # image: clojure:temurin-21-tools-deps-bookworm
 # cache: /root/.m2, /root/.npm, /var/cache/apt/archives
+# cache: /workspace/node_modules, /workspace/.shadow-cljs, /workspace/.cpcache
 #
 # Compiles the site and leaves it in $W8S_ARTIFACTS. This step produces an
 # artifact; it does not produce an image. What the image *is* - the nginx
@@ -35,6 +36,12 @@ rm -rf /var/lib/apt/lists/*
 # Both read and write their default cache location, which is what the
 # header names: ~/.npm for npm, ~/.m2 for the Maven repository tools-deps
 # resolves into.
+#
+# The three workspace caches above matter more than those two. The checkout
+# is replaced on every run, so without them `npm ci` reinstalls into an
+# empty node_modules and shadow-cljs recompiles every namespace, however
+# little of the source changed - the downloads were never the expensive
+# part.
 npm ci --no-audit --no-fund
 clojure -A:dev -P
 npx shadow-cljs release main
