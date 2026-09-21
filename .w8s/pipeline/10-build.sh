@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# w8s-image: clojure:temurin-21-tools-deps-bookworm
-# w8s-cache: /root/.m2, /root/.npm, /var/cache/apt/archives
+# image: clojure:temurin-21-tools-deps-bookworm
+# cache: /root/.m2, /root/.npm, /var/cache/apt/archives
 #
 # Compiles the site and leaves it in $W8S_ARTIFACTS. This step produces an
 # artifact; it does not produce an image. What the image *is* - the nginx
