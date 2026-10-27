@@ -20,8 +20,8 @@ app:
   siteUrl: https://w3t.se
   # The webinar's join link (e.g. a Google Meet link). Server-side only:
   # it goes in confirmation emails, the calendar invite and
-  # server/send-join-link.mjs, never on the public site. Empty until set.
-  webinarJoinUrl: 
+  # server/send-join-link.mjs, never on the public site.
+  webinarJoinUrl: https://meet.google.com/txf-hqyd-mmg
   notifyTo: info@w3t.se
   # Reminders to the webinar's Mailgun list (server/send-reminder.mjs),
   # through the Mailgun template "webinar-reminder". Each CronJob sends
