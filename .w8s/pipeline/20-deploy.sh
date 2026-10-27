@@ -13,6 +13,13 @@
 #     a build pod, raw YAML or base64 of it. Comes from the run's
 #     environment, or from the Secret hub-kubeconfig in w8s-ci once its
 #     w8s.cloud/ci-repos annotation lists w3t-se/w3t-web.
+#   - Does not wait for the rollout. `# input: image` should put this
+#     step after the image is assembled and pushed, but a hub that runs it
+#     before assembly would otherwise wait on an image that cannot exist
+#     yet. Pointing the Deployment at this commit's tag and returning
+#     works in either order: kubelet retries the pull, and the pod starts
+#     once this run's push lands. Check the rollout with
+#     `kubectl -n w3t-web rollout status deployment/w3t-web`.
 #   - W8S_IMAGE names the in-cluster push endpoint, which kubelet cannot
 #     pull from, so the same image is deployed from the registry's public
 #     host with CI's own pull credential (w8s-ci/w8s-registry-pull),
@@ -59,12 +66,19 @@ kubectl -n "$NAMESPACE" create secret docker-registry "$PULL_SECRET" \
 rm -f "$(dirname "$kc")/dockerconfig.json"
 
 # --- Release ---------------------------------------------------------------
+# A release that never reached "deployed" (a first install that failed)
+# blocks upgrades; nothing of it is worth keeping, so remove it.
+if helm status "$RELEASE" -n "$NAMESPACE" >/dev/null 2>&1 \
+  && ! helm history "$RELEASE" -n "$NAMESPACE" -o json | grep -q '"status":"deployed"' \
+  && ! helm history "$RELEASE" -n "$NAMESPACE" -o json | grep -q '"status":"superseded"'; then
+  echo "release $RELEASE was never deployed; removing it before installing"
+  helm uninstall "$RELEASE" -n "$NAMESPACE"
+fi
+
 helm upgrade --install "$RELEASE" "$CHART" \
   --namespace "$NAMESPACE" \
   --set image.repository="$REGISTRY/$repo" \
   --set image.tag="$tag" \
-  --set imagePullSecrets[0].name="$PULL_SECRET" \
-  --wait --timeout 5m
+  --set imagePullSecrets[0].name="$PULL_SECRET"
 
-kubectl -n "$NAMESPACE" rollout status deployment/"$RELEASE" --timeout 2m
-echo "deployed $RELEASE @ $tag"
+echo "released $RELEASE @ $tag; pods start once $REGISTRY/$repo:$tag is pushed"
