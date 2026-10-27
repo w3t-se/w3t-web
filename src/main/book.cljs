@@ -11,7 +11,7 @@
          [:div {:class "center"}
           [:span {:class "pill"} "Book a call"]
           [:h1 {:class "page-title"} "Talk to an engineer"]
-          [:p {:class "lead"} "30 minutes on where you are today and what the first month could look like. Pick a time that suits you."]]
+          [:p {:class "lead"} "A short call about where you are today and what the first month could look like. Pick a time that suits you."]]
          (if (not= "" config/hubspot-meetings-url)
            #jsx [:div {:class "booking"}
                  [:iframe {:title "Book a call with W3T"
