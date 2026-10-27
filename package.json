@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@solidjs/router": "^1.0.0",
     "@w3t-ab/sqeave": "0.7.2",
     "solid-js": "^1.9.12",
     "typed.js": "^2.1.0"

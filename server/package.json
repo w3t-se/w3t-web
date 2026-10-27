@@ -1,0 +1,15 @@
+{
+  "name": "w3t-web-server",
+  "private": true,
+  "type": "module",
+  "description": "Serves the built site and the webinar signup API.",
+  "scripts": {
+    "start": "node index.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "ics": "3.12.1",
+    "mailgun.js": "14.1.0",
+    "sirv": "3.0.2"
+  }
+}

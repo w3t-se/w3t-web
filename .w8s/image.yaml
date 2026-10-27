@@ -1,9 +1,17 @@
-# Static nginx with the site baked in at build time, same shape as the
-# w8s docs-site. Unprivileged so it runs under Pod Security "restricted".
-from: nginxinc/nginx-unprivileged:1.27-alpine
+# Node serves the built site and the webinar signup API (server/).
+# One image on purpose: this hub assembles one image per pipeline.
+from: node:22-alpine
 
 copy:
-  /artifacts/out/usr/share/nginx/html: /usr/share/nginx/html
-  /artifacts/out/etc/nginx/conf.d/default.conf: /etc/nginx/conf.d/default.conf
+  /artifacts/out/app: /app
+
+workdir: /app
+user: "1000"
+env:
+  NODE_ENV: production
+  PORT: "8080"
+  SITE_DIR: /app/public
+  WEBINAR_FILE: /app/webinar.json
+cmd: ["node", "server/index.mjs"]
 
 expose: ["8080"]

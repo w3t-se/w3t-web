@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 # image: alpine/k8s:1.31.13
 # input: image
-# secret: hub-kubeconfig
+# secret: hub-kubeconfig, mailgun-api-key
 #
 # Deploys the image this run built to w8s-frontend-cluster (the hub
 # cluster) with the chart in chart/w3t-web, as release "w3t-web" in
 # namespace "w3t-web". Runs on every push to main (the trigger is on
 # 10-build.sh), or by hand: `wctl ci run` from a checkout of main.
+#
+# mailgun-api-key: the Mailgun API key the webinar signup uses (EU
+# region, domain mg.w3t.se). Written to the Secret w3t-web-mailgun in the
+# release namespace; its checksum goes on the pod template, so a rotated
+# key restarts the pods.
 #
 # Same shape as the w8s repo's ops/redeploy-keycloak:
 #   - hub-kubeconfig: a kubeconfig that reaches the hub's API server from
@@ -76,6 +81,16 @@ kubectl -n "$NAMESPACE" create secret docker-registry "$PULL_SECRET" \
   --dry-run=client -o yaml | kubectl apply -f -
 rm -f "$dockercfg"
 
+# --- Mailgun key -----------------------------------------------------------
+: "${MAILGUN_API_KEY:?# secret: mailgun-api-key did not reach this step}"
+keyfile="$(dirname "$kc")/mailgun-api-key"
+printf '%s' "$MAILGUN_API_KEY" >"$keyfile"
+kubectl -n "$NAMESPACE" create secret generic w3t-web-mailgun \
+  --from-file=api-key="$keyfile" \
+  --dry-run=client -o yaml | kubectl apply -f -
+key_checksum=$(sha256sum "$keyfile" | cut -c1-16)
+rm -f "$keyfile"
+
 # --- Release ---------------------------------------------------------------
 # A release that never reached "deployed" (a first install that failed)
 # blocks upgrades; nothing of it is worth keeping, so remove it.
@@ -90,6 +105,7 @@ helm upgrade --install "$RELEASE" "$CHART" \
   --namespace "$NAMESPACE" \
   --set image.repository="$REGISTRY/$repo" \
   --set image.tag="$tag" \
-  --set imagePullSecrets[0].name="$PULL_SECRET"
+  --set imagePullSecrets[0].name="$PULL_SECRET" \
+  --set app.mailgun.apiKeyChecksum="$key_checksum"
 
 echo "released $RELEASE @ $tag; pods start once $REGISTRY/$repo:$tag is pushed"

@@ -1,11 +1,11 @@
 (ns site
-  "The W3T landing page."
-  (:require ["solid-js" :refer [createSignal onMount onCleanup]]
-            ["@w3t-ab/sqeave" :as sqeave]
+  "The shared layout and the home page."
+  (:require ["solid-js" :refer [createEffect]]
+            ["@solidjs/router" :refer [A useLocation]]
             ["./typewriter.cljs" :refer [Typewriter]]
             ["./starfield.cljs" :refer [Starfield]]
-            ["./config.cljs" :as config])
-  (:require-macros [sqeave :refer [defc]]))
+            ["./webinar.cljs" :refer [Countdown short-title]]
+            ["./config.cljs" :as config]))
 
 (defn Arrow []
   #jsx [:svg {:viewBox "0 0 12 12" :fill "none" :stroke "currentColor" :stroke-width "1.8" :aria-hidden "true"}
@@ -14,50 +14,12 @@
 (defn Header []
   #jsx [:header {}
         [:div {:class "wrap nav"}
-         [:a {:class "logo" :href "#top" :aria-label "W3T home"} "W3T"]
+         [A {:class "logo" :href "/" :aria-label "W3T home"} "W3T"]
          [:ul {}
-          [:li {:class "hide-sm"} [:a {:href "#services"} "Services"]]
-          [:li {:class "hide-sm"} [:a {:href "#work"} "Blog"]]
-          [:li {} [:a {:class "btn btn-accent" :href "#contact"} "Book a call"]]]]])
-
-;; --- Countdown -------------------------------------------------------------
-;; The webinar lives in the Sqeave store under [:webinar/id 0]. The start
-;; comes from config.cljs on mount; anything that later calls
-;; (sqeave/set! this :webinar/start ...) moves every view with it.
-
-(defn- pad [n] (.padStart (str n) 2 "0"))
-
-(defn- remaining [start now]
-  (let [s (if start
-            (js/Math.max 0 (js/Math.floor (/ (- (.getTime (js/Date. start)) now) 1000)))
-            0)]
-    [(pad (js/Math.floor (/ s 86400)))
-     (pad (js/Math.floor (/ (mod s 86400) 3600)))
-     (pad (js/Math.floor (/ (mod s 3600) 60)))
-     (pad (mod s 60))]))
-
-(defn- format-start [start]
-  (.toLocaleString (js/Date. start) "en-GB"
-                   {:dateStyle "long" :timeStyle "short" :timeZone "Europe/Stockholm"}))
-
-(defc Countdown [this {:webinar/keys [id start title] :or {id 0 start nil title "Bare Metal K8S"}}]
-  (let [[now set-now] (createSignal (js/Date.now))]
-    (onMount
-     (fn []
-       (when config/webinar-start
-         (sqeave/set! this :webinar/start config/webinar-start))
-       (let [iv (js/setInterval #(set-now (js/Date.now)) 1000)]
-         (onCleanup #(js/clearInterval iv)))))
-    #jsx [:<>
-          [:div {:class "countdown" :aria-label "Time until the webinar"}
-           [:div {} [:b {} (nth (remaining (start) (now)) 0)] [:small {} "days"]]
-           [:div {} [:b {} (nth (remaining (start) (now)) 1)] [:small {} "hours"]]
-           [:div {} [:b {} (nth (remaining (start) (now)) 2)] [:small {} "minutes"]]
-           [:div {} [:b {} (nth (remaining (start) (now)) 3)] [:small {} "seconds"]]]
-          [:p {:class "countdown-note"}
-           (if (start) (str (format-start (start)) ", Stockholm time") "Date announced soon")]
-          [:a {:class "btn btn-signal" :href "#webinar"}
-           (str "Webinar Signup: " (title)) [Arrow]]]))
+          [:li {:class "hide-sm"} [A {:href "/#services"} "Services"]]
+          [:li {:class "hide-sm"} [A {:href "/webinar" :activeClass "nav-current"} "Webinar"]]
+          [:li {:class "hide-sm"} [A {:href "/#work"} "Blog"]]
+          [:li {} [A {:class "btn btn-accent" :href "/book"} "Book a call"]]]]])
 
 ;; --- Hero --------------------------------------------------------------------
 
@@ -72,12 +34,13 @@
                        :label "Kubernetes, DevOps and Operations"}]
           [:span {} "partner"]]
          [:div {:class "ctas"}
-          [:a {:class "btn btn-accent" :href "#contact"} "Get in touch" [Arrow]]
-          [:a {:class "btn btn-ghost" :href "#services"} "View services"]]
-         [Countdown {:ident [:webinar/id 0]}]]])
+          [A {:class "btn btn-accent" :href "/book"} "Get in touch" [Arrow]]
+          [A {:class "btn btn-ghost" :href "/#services"} "View services"]]
+         [Countdown {:ident [:webinar/id 0]}]
+         [A {:class "btn btn-signal" :href "/webinar"} (str "Webinar Signup: " short-title) [Arrow]]]])
 
 (defn Trust []
-  (let [names ["Länsförsäkringar" "KEYFACTOR" "SMHI" "agro"]]
+  (let [names ["Länsförsäkringar" "KEYFACTOR" "SMHI" "agronod"]]
     #jsx [:section {:class "trust"}
           [:div {:class "wrap"}
            [:p {} "Businesses who already trust us"]
@@ -145,24 +108,7 @@
          [:div {:class "svcs"}
           (vec (map-indexed (fn [i s] #jsx [Service {:s s :flip (odd? i)}]) services))]]])
 
-;; --- Webinar, work, contact -------------------------------------------------
-
-(def agenda
-  [["10 min" "Why teams are leaving VMware, and what it really costs to stay or go."]
-   ["15 min" "Migration paths: VMs on KubeVirt, containerise, or retire."]
-   ["10 min" "Live demo: the landing zone, with segmentation and access built in."]
-   ["10 min" "Questions."]])
-
-(defn Webinar []
-  #jsx [:section {:class "band" :id "webinar"}
-        [:div {:class "wrap webinar"}
-         [:div {:class "stack"}
-          [:span {:class "pill"} "Webinar"]
-          [:h2 {} "Leaving VMware for bare metal Kubernetes"]
-          [:p {:class "lead left"} "45 minutes on what to move, what to keep, and what the platform looks like when you land."]
-          [:a {:class "btn btn-signal" :href "#contact"} "Save my seat" [Arrow]]]
-         [:ul {}
-          (mapv (fn [[t d]] #jsx [:li {} [:b {} t] [:span {} d]]) agenda)]]])
+;; --- Work and contact --------------------------------------------------
 
 (def work
   [{:who "Länsförsäkringar" :title "Containerizing a core insurance platform"
@@ -192,7 +138,7 @@
         [:div {:class "wrap center"}
          [:h2 {} "Talk to an engineer"]
          [:p {:class "lead"} "Tell us where you are today. We'll tell you what the first month looks like."]
-         [:a {:class "btn btn-accent" :href (str "mailto:" config/email)} "Book a call" [Arrow]]
+         [A {:class "btn btn-accent" :href "/book"} "Book a call" [Arrow]]
          [:p {:class "contact-lines"}
           [:a {:href (str "mailto:" config/email)} config/email]
           [:a {:href (str "tel:" config/phone-e164)} config/phone]]]])
@@ -203,14 +149,30 @@
          [:span {} "© 2026 W3T AB"]
          [:a {:href "https://github.com/w3t-se"} "GitHub"]]])
 
-(defn Site []
+(defn Home []
   #jsx [:<>
-        [Header]
-        [:main {:id "top"}
-         [Hero]
-         [Trust]
-         [Services]
-         [Webinar]
-         [Work]
-         [Contact]]
-        [Footer]])
+        [Hero]
+        [Trust]
+        [Services]
+        [Work]
+        [Contact]])
+
+(defn- scroll-to-hash
+  "After a route change, show the section the link named (/#services),
+   or the top of the page."
+  [hash]
+  (js/requestAnimationFrame
+   (fn []
+     (if-let [el (and (not= "" hash) (js/document.getElementById (.slice hash 1)))]
+       (.scrollIntoView el)
+       (js/window.scrollTo 0 0)))))
+
+(defn Layout
+  "The router's root: header and footer around the current route."
+  [props]
+  (let [loc (useLocation)]
+    (createEffect (fn [] (.-pathname loc) (scroll-to-hash (.-hash loc))))
+    #jsx [:<>
+          [Header]
+          [:main {:id "top"} (:children props)]
+          [Footer]]))

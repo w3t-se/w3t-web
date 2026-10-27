@@ -164,3 +164,46 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   .svc.flip .panel { order: 0; }
   .svcs { gap: 64px; }
 }
+
+/* Routed pages */
+.nav ul a.nav-current { color: var(--accent); }
+.page-hero .hero-inner { padding-block: 140px 120px; gap: 22px; }
+.page-title { margin: 0; font-size: clamp(36px, 5.5vw, 60px); line-height: 1.12; letter-spacing: -0.04em; font-weight: 700; text-wrap: balance; max-width: 20ch; }
+.agenda { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+.agenda li { display: grid; grid-template-columns: 64px 1fr; gap: 12px; color: var(--muted); }
+.agenda li b { color: var(--accent); font-variant-numeric: tabular-nums; }
+.webinar { align-items: start; }
+
+/* Signup form */
+.signup { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 28px; min-width: 0; }
+.signup form { display: flex; flex-direction: column; gap: 8px; }
+.signup h3 { margin: 0; font-size: 24px; letter-spacing: -0.02em; }
+.signup label { font-size: 14px; font-weight: 600; margin-top: 8px; }
+.signup .opt { color: var(--dim); font-weight: 500; }
+.signup input:not([type="checkbox"]) {
+  width: 100%; padding: 11px 12px; border-radius: 6px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--fg); font: inherit; font-size: 16px;
+}
+.signup input:focus-visible { outline: 2px solid var(--signal); outline-offset: 1px; border-color: transparent; }
+.signup .row2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.signup .row2 > div { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.signup .check { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: start; font-weight: 500; color: var(--muted); margin-top: 14px; }
+.signup .check input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--signal); }
+.signup button { margin-top: 14px; align-self: flex-start; cursor: pointer; font: inherit; font-weight: 600; }
+.signup button:disabled { opacity: 0.6; cursor: progress; }
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.form-note { margin: 0; color: var(--muted); font-size: 15px; }
+.form-error { margin: 8px 0 0; color: #ff8a7a; font-size: 15px; }
+.signup-done h3 { color: var(--accent); }
+.signup-done p { color: var(--muted); margin: 10px 0 0; }
+
+/* Booking */
+.booking { margin-top: 48px; display: flex; flex-direction: column; gap: 12px; }
+.booking iframe { width: 100%; height: 760px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+.booking a, .form-note a { color: var(--accent); }
+.booking-fallback { margin-top: 40px; text-align: center; color: var(--muted); }
+@media (max-width: 560px) {
+  .signup .row2 { grid-template-columns: 1fr; }
+  .booking iframe { height: 900px; }
+  .page-hero .hero-inner { padding-block: 96px 80px; }
+}

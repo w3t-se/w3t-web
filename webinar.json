@@ -1,0 +1,15 @@
+{
+  "id": "bare-metal-k8s-2026-12",
+  "title": "Leaving VMware for bare metal Kubernetes",
+  "shortTitle": "Bare Metal K8S",
+  "start": "2026-12-08T15:00:00+01:00",
+  "durationMinutes": 45,
+  "summary": "45 minutes on what to move, what to keep, and what the platform looks like when you land.",
+  "agenda": [
+    ["10 min", "Why teams are leaving VMware, and what it really costs to stay or go."],
+    ["15 min", "Migration paths: VMs on KubeVirt, containerise, or retire."],
+    ["10 min", "Live demo: the landing zone, with segmentation and access built in."],
+    ["10 min", "Questions."]
+  ],
+  "mailingList": "bare-metal-k8s-2026-12@mg.w3t.se"
+}

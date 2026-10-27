@@ -1,9 +1,11 @@
 (ns config
-  "Site settings that change without touching the components.")
+  "Site settings that change without touching the components.
+   The webinar's details are in webinar.json at the repository root.")
 
-;; Webinar start, ISO 8601 with offset. nil shows "Date announced soon".
-;; Example: "2026-11-26T15:00:00+01:00"
-(def webinar-start nil)
+;; Your HubSpot Meetings link (HubSpot → Library → Meetings → Copy link),
+;; e.g. "https://meetings-eu1.hubspot.com/daniel". Empty shows email and
+;; phone on /book instead of the calendar.
+(def hubspot-meetings-url "")
 
 (def email "info@w3t.se")
 (def phone "+46 73 032 24 99")

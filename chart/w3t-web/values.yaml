@@ -15,6 +15,20 @@ resources:
 service:
   port: 80
 
+# The signup server's settings (server/README in the repo's README.md).
+app:
+  siteUrl: https://w3t.se
+  notifyTo: info@w3t.se
+  mailgun:
+    domain: mg.w3t.se
+    url: https://api.eu.mailgun.net
+    # The Secret holding the API key under `api-key`; 20-deploy.sh writes
+    # it from the pipeline secret mailgun-api-key. Missing, signups
+    # answer 503 and the rest of the site works.
+    apiKeySecret: w3t-web-mailgun
+    # Set by 20-deploy.sh so a rotated key restarts the pods.
+    apiKeyChecksum: ""
+
 # Route through the hub's Gateway. w8s publishes these hostnames once the
 # agent reports the route (w3t.se is a custom domain of the org).
 # Never leave this empty with a route: a route without hostnames would
