@@ -123,7 +123,7 @@ function button(href, label) {
 
 const UNSUBSCRIBE = 'You get this because you registered for the webinar. <a href="%mailing_list_unsubscribe_url%" style="color:#7a7a85">Unsubscribe</a>';
 
-/** "Tuesday, 8 December 2026, 15:00" in Stockholm time. */
+/** "Tuesday, 8 December 2026, 16:30" in Stockholm time. */
 export function formatStart(webinar) {
   const d = new Date(webinar.start);
   const day = d.toLocaleDateString('en-GB', {

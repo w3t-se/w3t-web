@@ -27,15 +27,15 @@ test('a filled honeypot looks like success and carries no signup', () => {
   assert.deepEqual(r, { ok: true, bot: true });
 });
 
-test('the invite starts at 14:00 UTC on 8 December 2026 and lasts 45 minutes', () => {
+test('the invite starts at 15:30 UTC on 8 December 2026 and lasts 45 minutes', () => {
   const ics = webinarInvite(webinar, 'https://w3t.se');
-  assert.match(ics, /DTSTART:20261208T140000Z/);
+  assert.match(ics, /DTSTART:20261208T153000Z/);
   assert.match(ics, /DURATION:PT45M/);
   assert.match(ics, /UID:bare-metal-k8s-2026-12@w3t.se/);
 });
 
 test('the start reads in Stockholm time', () => {
-  assert.equal(formatStart(webinar), 'Tuesday, 8 December 2026, 15:00');
+  assert.equal(formatStart(webinar), 'Tuesday, 8 December 2026, 16:30');
 });
 
 test('the confirmation escapes the name in html', () => {
@@ -76,7 +76,7 @@ test('with a join link, the confirmation, invite and list email carry it', () =>
 const at = (iso) => new Date(iso).getTime();
 
 test('the week reminder is due 6 to 8 days before, the day reminder 12 to 36 hours before', () => {
-  // Start: 2026-12-08 15:00 Stockholm (14:00 UTC).
+  // Start: 2026-12-08 16:30 Stockholm (15:30 UTC).
   assert.equal(reminderDue(webinar, 'week', at('2026-12-01T09:00:00Z')), true);
   assert.equal(reminderDue(webinar, 'week', at('2026-12-05T09:00:00Z')), false);
   assert.equal(reminderDue(webinar, 'day', at('2026-12-07T09:00:00Z')), true);
