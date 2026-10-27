@@ -9,6 +9,7 @@ import { createMailer } from './mailer.mjs';
 import {
   validateSignup, webinarInvite, confirmationEmail, notificationEmail, rateLimiter,
 } from './signup.mjs';
+import { headFor, renderPage, robotsTxt, sitemapXml } from './pages.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const SITE_DIR = process.env.SITE_DIR || path.resolve(here, '../dist');
@@ -26,8 +27,23 @@ const allow = rateLimiter({ max: 5, windowMs: 10 * 60 * 1000 });
 
 if (!mailer) console.warn('MAILGUN_API_KEY is not set: webinar signups answer 503');
 
+// index.html as built; each route gets its own head from pages.mjs.
+const indexHtml = fs.readFileSync(path.join(SITE_DIR, 'index.html'), 'utf8');
+
+function page(res, pathname) {
+  const { status, head } = headFor(pathname, { siteUrl: SITE_URL, webinar });
+  res.writeHead(status, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
+  res.end(renderPage(indexHtml, head));
+}
+
+function text(res, type, body) {
+  res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'public, max-age=3600' });
+  res.end(body);
+}
+
 const assets = sirv(SITE_DIR, {
-  single: true,
+  // A path that is not a file is a page (or a 404), rendered by page().
+  onNoMatch: (req, res) => page(res, new URL(req.url, 'http://localhost').pathname),
   etag: true,
   setHeaders(res, pathname) {
     res.setHeader(
@@ -127,6 +143,17 @@ const server = http.createServer((req, res) => {
     });
   }
   if (url.pathname.startsWith('/api/')) return json(res, 404, { error: 'Not found.' });
+  if (url.pathname === '/robots.txt') return text(res, 'text/plain; charset=utf-8', robotsTxt(SITE_URL));
+  if (url.pathname === '/sitemap.xml') return text(res, 'application/xml; charset=utf-8', sitemapXml(SITE_URL, webinar));
+  // One URL per page: /webinar/ and /webinar are the same page to a crawler.
+  if (url.pathname.length > 1 && url.pathname.endsWith('/')) {
+    res.writeHead(301, { Location: url.pathname.replace(/\/+$/, '') + url.search });
+    return res.end();
+  }
+  // Pages are rendered here, not by sirv, which would serve index.html's
+  // generic head for "/" and "/index.html".
+  if (url.pathname === '/index.html') { res.writeHead(301, { Location: '/' }); return res.end(); }
+  if (url.pathname === '/') return page(res, '/');
   return assets(req, res);
 });
 
