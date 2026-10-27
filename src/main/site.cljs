@@ -28,7 +28,7 @@
         [Starfield]
         [:div {:class "wrap hero-inner"}
          [:h1 {}
-          [:span {} "Your"]
+          [:span {} "Your "]
           [Typewriter {:class "typed-line"
                        :words ["Kubernetes" "DevOps" "Operations"]
                        :label "Kubernetes, DevOps and Operations"}]
