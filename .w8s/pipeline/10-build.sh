@@ -24,5 +24,5 @@ mkdir -p /out/app/public /out/app/server
 cp -R dist/. /out/app/public/
 cp server/package.json server/package-lock.json server/*.mjs /out/app/server/
 rm -f /out/app/server/*.test.mjs
-cp -R server/node_modules /out/app/server/
+cp -R server/node_modules server/assets /out/app/server/
 cp webinar.json /out/app/webinar.json

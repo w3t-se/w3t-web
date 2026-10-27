@@ -77,6 +77,48 @@ export function webinarInvite(webinar, siteUrl) {
   return value;
 }
 
+// --- Email layout ----------------------------------------------------------
+
+/** Content id of the logo, which the mailer attaches inline. */
+export const LOGO_CID = 'w3t-logo.png';
+
+const P = 'margin:0 0 14px';
+
+/**
+ * Wraps an email body in the W3T layout: a black band with the logo, a
+ * white card, a footer. Tables and inline styles only, since that is what
+ * Gmail and Outlook render. The logo is `cid:` so it shows without the
+ * reader allowing remote images.
+ */
+export function emailLayout(content, { footer = '' } = {}) {
+  return `<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light only"></head>
+<body style="margin:0;padding:0;background:#f2f2f4">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f2f2f4">
+<tr><td align="center" style="padding:24px 12px">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px">
+<tr><td bgcolor="#000000" style="background:#000000;padding:22px 28px;border-radius:8px 8px 0 0">
+<a href="https://w3t.se"><img src="cid:${LOGO_CID}" width="84" height="25" alt="W3T" style="display:block;border:0;width:84px;height:25px"></a>
+</td></tr>
+<tr><td bgcolor="#ffffff" style="background:#ffffff;padding:28px;border-radius:0 0 8px 8px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;color:#1a1a1a">
+${content}
+</td></tr>
+<tr><td style="padding:16px 28px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:1.5;color:#7a7a85">
+W3T AB · <a href="https://w3t.se" style="color:#7a7a85">w3t.se</a> · <a href="mailto:info@w3t.se" style="color:#7a7a85">info@w3t.se</a>${footer ? `<br>${footer}` : ''}
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>`;
+}
+
+/** The blue call-to-action button, as email clients render buttons. */
+function button(href, label) {
+  return `<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:6px 0 20px"><tr><td bgcolor="#2f6bff" style="border-radius:4px"><a href="${href}" style="display:inline-block;padding:12px 20px;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none">${label}</a></td></tr></table>`;
+}
+
+const UNSUBSCRIBE = 'You get this because you registered for the webinar. <a href="%mailing_list_unsubscribe_url%" style="color:#7a7a85">Unsubscribe</a>';
+
 /** "Tuesday, 8 December 2026, 15:00" in Stockholm time. */
 export function formatStart(webinar) {
   const d = new Date(webinar.start);
@@ -118,15 +160,14 @@ If you can't make it, reply to this email and we'll send you the recording.
 W3T
 ${siteUrl}
 `;
-  const html = `<p>Hi ${escapeHtml(first)},</p>
-<p>You're registered for the W3T webinar <strong>${escapeHtml(webinar.title)}</strong>.</p>
-<p><strong>When:</strong> ${escapeHtml(when)} (Stockholm time), ${webinar.durationMinutes} minutes<br>
-<strong>Where:</strong> ${join ? `online, <a href="${escapeHtml(join)}">${escapeHtml(join)}</a>` : "online. We'll email you the join link before we start."}</p>
-<p>The calendar invite is attached.</p>
-<p><strong>Agenda</strong></p>
-<ul>${webinar.agenda.map(([t, d]) => `<li>${escapeHtml(t)}: ${escapeHtml(d)}</li>`).join('')}</ul>
-<p>If you can't make it, reply to this email and we'll send you the recording.</p>
-<p>W3T<br><a href="${siteUrl}">${siteUrl.replace(/^https?:\/\//, '')}</a></p>`;
+  const html = emailLayout(`<p style="${P}">Hi ${escapeHtml(first)},</p>
+<p style="${P}">You're registered for the W3T webinar <strong>${escapeHtml(webinar.title)}</strong>.</p>
+<p style="${P}"><strong>When:</strong> ${escapeHtml(when)} (Stockholm time), ${webinar.durationMinutes} minutes<br>
+<strong>Where:</strong> ${join ? `online, <a href="${escapeHtml(join)}" style="color:#2f6bff">${escapeHtml(join)}</a>` : "online. We'll email you the join link before we start."}</p>
+${join ? button(escapeHtml(join), 'Join with Google Meet') : ''}<p style="${P}">The calendar invite is attached.</p>
+<p style="margin:0 0 6px"><strong>Agenda</strong></p>
+<ul style="margin:0 0 14px;padding-left:20px">${webinar.agenda.map(([t, d]) => `<li>${escapeHtml(t)}: ${escapeHtml(d)}</li>`).join('')}</ul>
+<p style="margin:0">If you can't make it, reply to this email and we'll send you the recording.</p>`);
   return { subject, text: textBody, html };
 }
 
@@ -154,15 +195,12 @@ ${siteUrl}
 
 You get this because you registered for the webinar. Unsubscribe: %mailing_list_unsubscribe_url%
 `;
-  const html = `<p>Hi,</p>
-<p>Here is your link for the W3T webinar <strong>${escapeHtml(webinar.title)}</strong>.</p>
-<p><strong>When:</strong> ${escapeHtml(when)} (Stockholm time), ${webinar.durationMinutes} minutes<br>
-<strong>Join:</strong> <a href="${escapeHtml(join)}">${escapeHtml(join)}</a></p>
-<p>Join from your browser a few minutes early; you don't need to install anything.
-If you can't make it, reply to this email and we'll send you the recording.</p>
-<p>W3T<br><a href="${siteUrl}">${siteUrl.replace(/^https?:\/\//, '')}</a></p>
-<p style="color:#888;font-size:12px">You get this because you registered for the webinar.
-<a href="%mailing_list_unsubscribe_url%">Unsubscribe</a></p>`;
+  const html = emailLayout(`<p style="${P}">Hi,</p>
+<p style="${P}">Here is your link for the W3T webinar <strong>${escapeHtml(webinar.title)}</strong>.</p>
+<p style="${P}"><strong>When:</strong> ${escapeHtml(when)} (Stockholm time), ${webinar.durationMinutes} minutes<br>
+<strong>Join:</strong> <a href="${escapeHtml(join)}" style="color:#2f6bff">${escapeHtml(join)}</a></p>
+${button(escapeHtml(join), 'Join with Google Meet')}<p style="${P}">Join from your browser a few minutes early; you don't need to install anything.</p>
+<p style="margin:0">If you can't make it, reply to this email and we'll send you the recording.</p>`, { footer: UNSUBSCRIBE });
   return { subject, text: textBody, html };
 }
 
@@ -208,19 +246,14 @@ export const REMINDER_TEMPLATE = 'webinar-reminder';
  * list of {time, topic}). Mailgun fills %mailing_list_unsubscribe_url%
  * per member, which works only when sent to the list.
  */
-export const REMINDER_TEMPLATE_HTML = `<div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;color:#1a1a1a;max-width:560px">
-<p>Hi,</p>
-<p>The W3T webinar <strong>{{title}}</strong> {{lead}}.</p>
-<p><strong>When:</strong> {{when}} (Stockholm time), {{duration}} minutes<br>
-<strong>Join:</strong> <a href="{{join_url}}">{{join_url}}</a></p>
-<p style="margin:20px 0"><a href="{{join_url}}" style="background:#2f6bff;color:#fff;text-decoration:none;padding:11px 18px;border-radius:4px;font-weight:600;display:inline-block">Join with Google Meet</a></p>
-<p><strong>Agenda</strong></p>
-<ul>{{#each agenda}}<li>{{this.time}}: {{this.topic}}</li>{{/each}}</ul>
-<p>Join from your browser a few minutes early; you don't need to install anything. Microphones are off for attendees, so ask your questions in the chat.</p>
-<p>Can't make it? Reply to this email and we'll send you the recording.</p>
-<p>W3T<br><a href="{{page_url}}">{{page_url}}</a></p>
-<p style="color:#888;font-size:12px">You get this because you registered for the webinar. <a href="%mailing_list_unsubscribe_url%">Unsubscribe</a></p>
-</div>`;
+export const REMINDER_TEMPLATE_HTML = emailLayout(`<p style="${P}">Hi,</p>
+<p style="${P}">The W3T webinar <strong>{{title}}</strong> {{lead}}.</p>
+<p style="${P}"><strong>When:</strong> {{when}} (Stockholm time), {{duration}} minutes<br>
+<strong>Join:</strong> <a href="{{join_url}}" style="color:#2f6bff">{{join_url}}</a></p>
+${button('{{join_url}}', 'Join with Google Meet')}<p style="margin:0 0 6px"><strong>Agenda</strong></p>
+<ul style="margin:0 0 14px;padding-left:20px">{{#each agenda}}<li>{{this.time}}: {{this.topic}}</li>{{/each}}</ul>
+<p style="${P}">Join from your browser a few minutes early; you don't need to install anything. Microphones are off for attendees, so ask your questions in the chat.</p>
+<p style="margin:0">Can't make it? Reply to this email and we'll send you the recording. More at <a href="{{page_url}}" style="color:#2f6bff">{{page_url}}</a>.</p>`, { footer: UNSUBSCRIBE });
 
 const REMINDERS = {
   week: { lead: 'is next week', subject: 'Next week', before: 7 * 24, window: [6 * 24, 8 * 24] },

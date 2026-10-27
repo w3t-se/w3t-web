@@ -1,6 +1,12 @@
 // Mailgun, through its official client. One place that talks to it, so
 // index.mjs and the tests can swap in a fake.
+import fs from 'node:fs';
 import Mailgun from 'mailgun.js';
+import { LOGO_CID } from './signup.mjs';
+
+// The logo every layout email shows, attached inline as cid:w3t-logo.png.
+const LOGO = fs.readFileSync(new URL('./assets/w3t-logo.png', import.meta.url));
+const logoInline = () => ({ inline: [{ filename: LOGO_CID, data: LOGO }] });
 
 /**
  * A mailer for `domain`, or null when MAILGUN_API_KEY is not set (the
@@ -79,6 +85,7 @@ export function createMailer(env = process.env) {
         subject,
         template,
         'h:X-Mailgun-Variables': JSON.stringify(variables),
+        ...logoInline(),
       });
     },
     async send({ to, subject, text, html, attachments = [] }) {
@@ -89,6 +96,7 @@ export function createMailer(env = process.env) {
         subject,
         text,
         ...(html ? { html } : {}),
+        ...(html && html.includes(`cid:${LOGO_CID}`) ? logoInline() : {}),
         ...(attachments.length
           ? { attachment: attachments.map((a) => ({ filename: a.filename, data: Buffer.from(a.data) })) }
           : {}),
