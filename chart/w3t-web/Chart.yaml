@@ -1,0 +1,6 @@
+apiVersion: v2
+name: w3t-web
+description: The W3T website (w3t.se), a static Sqeave app served by nginx.
+type: application
+version: 0.1.0
+appVersion: "2.0.0"

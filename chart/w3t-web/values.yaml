@@ -1,0 +1,26 @@
+# Set by .w8s/pipeline/20-deploy.sh on every deploy.
+image:
+  repository: registry.w8s.cloud/w3t-web/w3t-web
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+replicaCount: 2
+
+resources:
+  requests: { cpu: 10m, memory: 32Mi }
+  limits: { memory: 128Mi }
+
+service:
+  port: 80
+
+# Route through the hub's Gateway. With no hostnames, no HTTPRoute is
+# created: a route without hostnames would match every host on the
+# shared w8s-gateway and take traffic from the hub's own apps.
+# Add the site's hostnames here when it is time to move off Framer, e.g.
+#   hostnames: [w3t.se, www.w3t.se]
+httproute:
+  hostnames: []
+  gatewayName: w8s-gateway
+  gatewayNamespace: w8s-system
