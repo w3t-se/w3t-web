@@ -54,10 +54,10 @@ kubectl -n w8s-ci annotate secret hub-kubeconfig --overwrite \
 Without it, a push to `main` is refused before any step runs, naming the
 missing secret.
 
-### Going live
+### Hostnames
 
-The chart creates no HTTPRoute until `httproute.hostnames` in
-`chart/w3t-web/values.yaml` is set. A route without hostnames would match
-every host on the shared `w8s-gateway`. To move w3t.se off Framer, set the
-hostnames, publish them in w8s (the domain must be a verified custom domain),
-then point DNS at it.
+The site is served as `w3t.se` and `www.w3t.se` (`httproute.hostnames` in
+`chart/w3t-web/values.yaml`), through the hub's `w8s-gateway`. `w3t.se` is a
+custom domain of the org in w8s, which publishes the hostnames once the route
+is reported. An empty list creates no HTTPRoute at all: a route without
+hostnames would match every host on the shared gateway.
