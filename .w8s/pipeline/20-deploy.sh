@@ -22,15 +22,17 @@
 #     `kubectl -n w3t-web rollout status deployment/w3t-web`.
 #   - W8S_IMAGE names the in-cluster push endpoint, which kubelet cannot
 #     pull from, so the same image is deployed from the registry's public
-#     host with CI's own pull credential (w8s-ci/w8s-registry-pull),
-#     copied into the release namespace on every run so a rotated
-#     credential reaches it too.
+#     host (registry-<slug>.w8s.cloud, or whatever the hub overrides it
+#     to) with CI's own pull credential (w8s-ci/w8s-registry-pull). The
+#     host is read from that credential, so the two always match.
+#     W3T_WEB_REGISTRY overrides it;
+#     the credential is copied into the release namespace on every run
+#     so a rotated one reaches it too.
 set -euo pipefail
 
 RELEASE=w3t-web
 NAMESPACE=w3t-web
 CHART=/workspace/chart/w3t-web
-REGISTRY="${W3T_WEB_REGISTRY:-registry.w8s.cloud}"
 PULL_SECRET=w8s-registry-pull
 CI_NAMESPACE=w8s-ci
 
@@ -52,18 +54,27 @@ path="${W8S_IMAGE#*/}"          # drop the push endpoint's host:port
 repo="${path%:*}"
 tag="${path##*:}"
 [ "$repo" != "$path" ] || fail "cannot read a tag from W8S_IMAGE=$W8S_IMAGE"
-echo "image: $REGISTRY/$repo:$tag"
 
 # --- Pull credential -------------------------------------------------------
 kubectl get namespace "$NAMESPACE" >/dev/null 2>&1 || kubectl create namespace "$NAMESPACE"
 kubectl -n "$CI_NAMESPACE" get secret "$PULL_SECRET" -o json >/dev/null 2>&1 \
   || fail "secret $CI_NAMESPACE/$PULL_SECRET not found - it is created with the CI registry"
+command -v jq >/dev/null || apk add --no-cache jq >/dev/null
+dockercfg="$(dirname "$kc")/dockerconfig.json"
 kubectl -n "$CI_NAMESPACE" get secret "$PULL_SECRET" -o jsonpath='{.data.\.dockerconfigjson}' \
-  | base64 -d >"$(dirname "$kc")/dockerconfig.json"
+  | base64 -d >"$dockercfg"
+
+# The public host kubelet pulls from: the credential's registry that is not
+# the in-cluster push endpoint.
+push_host="${W8S_IMAGE%%/*}"
+hosts=$(jq -r '.auths | keys[]' "$dockercfg" | grep -vxF "$push_host" || true)
+REGISTRY="${W3T_WEB_REGISTRY:-$(printf '%s\n' "$hosts" | grep -m1 '^registry-' || printf '%s\n' "$hosts" | head -n1)}"
+[ -n "$REGISTRY" ] || fail "$CI_NAMESPACE/$PULL_SECRET has no registry besides $push_host (has: $(jq -r '.auths | keys | join(", ")' "$dockercfg"))"
+echo "image: $REGISTRY/$repo:$tag"
 kubectl -n "$NAMESPACE" create secret docker-registry "$PULL_SECRET" \
-  --from-file=.dockerconfigjson="$(dirname "$kc")/dockerconfig.json" \
+  --from-file=.dockerconfigjson="$dockercfg" \
   --dry-run=client -o yaml | kubectl apply -f -
-rm -f "$(dirname "$kc")/dockerconfig.json"
+rm -f "$dockercfg"
 
 # --- Release ---------------------------------------------------------------
 # A release that never reached "deployed" (a first install that failed)
