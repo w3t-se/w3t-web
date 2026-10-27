@@ -17,7 +17,10 @@ const SITE_URL = (process.env.SITE_URL || 'https://w3t.se').replace(/\/$/, '');
 const NOTIFY_TO = process.env.NOTIFY_TO ?? 'info@w3t.se';
 const PORT = Number(process.env.PORT || 8080);
 
-const webinar = JSON.parse(fs.readFileSync(WEBINAR_FILE, 'utf8'));
+const webinar = {
+  ...JSON.parse(fs.readFileSync(WEBINAR_FILE, 'utf8')),
+  joinUrl: process.env.WEBINAR_JOIN_URL || '',
+};
 const mailer = createMailer();
 const allow = rateLimiter({ max: 5, windowMs: 10 * 60 * 1000 });
 
@@ -113,7 +116,7 @@ const server = http.createServer((req, res) => {
     return res.end('ok\n');
   }
   if (url.pathname === '/api/webinar' && req.method === 'GET') {
-    const { mailingList, ...pub } = webinar;
+    const { mailingList, joinUrl, ...pub } = webinar;
     return json(res, 200, { ...pub, signupOpen: Boolean(mailer) });
   }
   if (url.pathname === '/api/webinar/signup') {

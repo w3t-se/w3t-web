@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
-  validateSignup, webinarInvite, confirmationEmail, formatStart, rateLimiter,
+  validateSignup, webinarInvite, confirmationEmail, formatStart, rateLimiter, joinLinkEmail,
 } from './signup.mjs';
 
 const webinar = JSON.parse(fs.readFileSync(new URL('../webinar.json', import.meta.url), 'utf8'));
@@ -49,4 +49,25 @@ test('the limiter allows max hits per window, then resets', () => {
   assert.deepEqual([allow('a'), allow('a'), allow('a'), allow('b')], [true, true, false, true]);
   t = 1000;
   assert.equal(allow('a'), true);
+});
+
+const meet = 'https://meet.google.com/abc-defg-hij';
+
+test('before a join link is set, the emails and invite say it follows', () => {
+  const m = confirmationEmail(webinar, { name: 'Ada', email: 'a@b.co' }, 'https://w3t.se');
+  assert.match(m.text, /We'll email you the join link/);
+  assert.match(webinarInvite(webinar, 'https://w3t.se'), /LOCATION:Online. The join link follows by email./);
+  assert.throws(() => joinLinkEmail(webinar, 'https://w3t.se'), /no join link/);
+});
+
+test('with a join link, the confirmation, invite and list email carry it', () => {
+  const w = { ...webinar, joinUrl: meet };
+  const m = confirmationEmail(w, { name: 'Ada', email: 'a@b.co' }, 'https://w3t.se');
+  assert.match(m.text, /Where: online, https:\/\/meet\.google\.com\/abc-defg-hij/);
+  assert.match(m.html, /href="https:\/\/meet\.google\.com\/abc-defg-hij"/);
+  assert.match(webinarInvite(w, 'https://w3t.se'), /LOCATION:https:\/\/meet\.google\.com\/abc-defg-hij/);
+  const j = joinLinkEmail(w, 'https://w3t.se');
+  assert.match(j.subject, /^Your join link: /);
+  assert.match(j.text, /Join: https:\/\/meet\.google\.com\/abc-defg-hij/);
+  assert.match(j.text, /%mailing_list_unsubscribe_url%/);
 });

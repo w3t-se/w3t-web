@@ -18,6 +18,10 @@ service:
 # The signup server's settings (server/README in the repo's README.md).
 app:
   siteUrl: https://w3t.se
+  # The webinar's join link (e.g. a Google Meet link). Server-side only:
+  # it goes in confirmation emails, the calendar invite and
+  # server/send-join-link.mjs, never on the public site. Empty until set.
+  webinarJoinUrl: 
   notifyTo: info@w3t.se
   mailgun:
     domain: mg.w3t.se

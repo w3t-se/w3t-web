@@ -43,8 +43,20 @@ Spam handling is a honeypot field and 5 signups per IP per 10 minutes. After
 the start time the endpoint answers 410. Without a Mailgun key it answers 503
 and the form says to email info@w3t.se.
 
-To reach everyone who signed up (the join link, the recording), send to the
-list address in Mailgun.
+### The join link
+
+Set it in `chart/w3t-web/values.yaml` (`app.webinarJoinUrl`, e.g. a Google
+Meet link) and push. It stays server-side: never on the public site or in
+`/api/webinar`. From then on, confirmation emails and calendar invites carry
+it. To send it to everyone who registered earlier, run this in the pod:
+
+```console
+kubectl -n w3t-web exec deploy/w3t-web -- node server/send-join-link.mjs --test you@w3t.se   # one preview
+kubectl -n w3t-web exec deploy/w3t-web -- node server/send-join-link.mjs --yes               # the whole list
+```
+
+For anything else (a reminder, the recording), send to the list address in
+Mailgun.
 
 ## Book a call
 

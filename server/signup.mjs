@@ -44,14 +44,27 @@ function utcParts(date) {
   ];
 }
 
+/**
+ * Where to join, or null before it is set. The server puts it on the
+ * webinar from WEBINAR_JOIN_URL (chart: app.webinarJoinUrl), never from
+ * webinar.json: that file is bundled into the public site.
+ */
+export function joinUrl(webinar) {
+  const url = typeof webinar.joinUrl === 'string' ? webinar.joinUrl.trim() : '';
+  return url || null;
+}
+
 /** The calendar invite (.ics text) for the webinar. */
 export function webinarInvite(webinar, siteUrl) {
+  const join = joinUrl(webinar);
   const { error, value } = createEvent({
     uid: `${webinar.id}@w3t.se`,
     title: `W3T webinar: ${webinar.title}`,
-    description: `${webinar.summary}\n\nThe join link follows by email before the webinar.\n${siteUrl}/webinar`,
-    location: 'Online. The join link follows by email.',
-    url: `${siteUrl}/webinar`,
+    description: join
+      ? `${webinar.summary}\n\nJoin: ${join}\n${siteUrl}/webinar`
+      : `${webinar.summary}\n\nThe join link follows by email before the webinar.\n${siteUrl}/webinar`,
+    location: join || 'Online. The join link follows by email.',
+    url: join || `${siteUrl}/webinar`,
     start: utcParts(new Date(webinar.start)),
     startInputType: 'utc',
     startOutputType: 'utc',
@@ -85,13 +98,15 @@ export function confirmationEmail(webinar, signup, siteUrl) {
   const when = formatStart(webinar);
   const first = signup.name.split(/\s+/)[0];
   const agenda = webinar.agenda.map(([t, d]) => `  ${t}  ${d}`).join('\n');
+  const join = joinUrl(webinar);
+  const where = join ? `online, ${join}` : "online. We'll email you the join link before we start.";
   const subject = `You're registered: ${webinar.title}`;
   const textBody = `Hi ${first},
 
 You're registered for the W3T webinar "${webinar.title}".
 
 When: ${when} (Stockholm time), ${webinar.durationMinutes} minutes
-Where: online. We'll email you the join link before we start.
+Where: ${where}
 
 The calendar invite is attached.
 
@@ -106,12 +121,48 @@ ${siteUrl}
   const html = `<p>Hi ${escapeHtml(first)},</p>
 <p>You're registered for the W3T webinar <strong>${escapeHtml(webinar.title)}</strong>.</p>
 <p><strong>When:</strong> ${escapeHtml(when)} (Stockholm time), ${webinar.durationMinutes} minutes<br>
-<strong>Where:</strong> online. We'll email you the join link before we start.</p>
+<strong>Where:</strong> ${join ? `online, <a href="${escapeHtml(join)}">${escapeHtml(join)}</a>` : "online. We'll email you the join link before we start."}</p>
 <p>The calendar invite is attached.</p>
 <p><strong>Agenda</strong></p>
 <ul>${webinar.agenda.map(([t, d]) => `<li>${escapeHtml(t)}: ${escapeHtml(d)}</li>`).join('')}</ul>
 <p>If you can't make it, reply to this email and we'll send you the recording.</p>
 <p>W3T<br><a href="${siteUrl}">${siteUrl.replace(/^https?:\/\//, '')}</a></p>`;
+  return { subject, text: textBody, html };
+}
+
+/**
+ * The email with the join link, sent to the whole mailing list by
+ * send-join-link.mjs. Mailgun fills in the %...% variables per member.
+ */
+export function joinLinkEmail(webinar, siteUrl) {
+  const join = joinUrl(webinar);
+  if (!join) throw new Error('no join link: set app.webinarJoinUrl in the chart (WEBINAR_JOIN_URL)');
+  const when = formatStart(webinar);
+  const subject = `Your join link: ${webinar.title}, ${when}`;
+  const textBody = `Hi,
+
+Here is your link for the W3T webinar "${webinar.title}".
+
+When: ${when} (Stockholm time), ${webinar.durationMinutes} minutes
+Join: ${join}
+
+Join from your browser a few minutes early; you don't need to install anything.
+If you can't make it, reply to this email and we'll send you the recording.
+
+W3T
+${siteUrl}
+
+You get this because you registered for the webinar. Unsubscribe: %mailing_list_unsubscribe_url%
+`;
+  const html = `<p>Hi,</p>
+<p>Here is your link for the W3T webinar <strong>${escapeHtml(webinar.title)}</strong>.</p>
+<p><strong>When:</strong> ${escapeHtml(when)} (Stockholm time), ${webinar.durationMinutes} minutes<br>
+<strong>Join:</strong> <a href="${escapeHtml(join)}">${escapeHtml(join)}</a></p>
+<p>Join from your browser a few minutes early; you don't need to install anything.
+If you can't make it, reply to this email and we'll send you the recording.</p>
+<p>W3T<br><a href="${siteUrl}">${siteUrl.replace(/^https?:\/\//, '')}</a></p>
+<p style="color:#888;font-size:12px">You get this because you registered for the webinar.
+<a href="%mailing_list_unsubscribe_url%">Unsubscribe</a></p>`;
   return { subject, text: textBody, html };
 }
 
