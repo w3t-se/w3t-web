@@ -22,7 +22,7 @@ export function createMailer(env = process.env) {
     const sent = [];
     return {
       sent,
-      async addToList(list, member) { sent.push({ kind: 'list', list, member }); },
+      async addToList(list, member) { sent.push({ kind: 'list', list, member }); console.log(`[dry run] list ${list} += ${member.address} ${JSON.stringify(member.vars)}`); },
       async send(msg) { sent.push({ kind: 'message', from, replyTo, ...msg }); console.log(`[dry run] mail to ${msg.to}: ${msg.subject}`); },
       async ensureTemplate(name) { console.log(`[dry run] template ${name} up to date`); },
       async sendTemplate(msg) { sent.push({ kind: 'template', ...msg }); console.log(`[dry run] template ${msg.template} to ${msg.to}: ${msg.subject} ${JSON.stringify(msg.variables)}`); },

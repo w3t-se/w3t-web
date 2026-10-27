@@ -5,6 +5,7 @@
             ["./site.cljs" :refer [Layout Home]]
             ["./webinar.cljs" :refer [WebinarPage]]
             ["./book.cljs" :refer [BookPage]]
+            ["./source.cljs" :as source]
             ["./styles.css"])
   (:require-macros [sqeave :refer [defc]]))
 
@@ -21,6 +22,8 @@
         [Route {:path "/webinar" :component WebinarPage}]
         [Route {:path "/book" :component BookPage}]
         [Route {:path "*404" :component NotFound}]])
+
+(source/capture!)
 
 (let [e (js/document.getElementById "root")]
   (set! (.-innerHTML e) "")

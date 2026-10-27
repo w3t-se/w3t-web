@@ -25,13 +25,17 @@ export function validateSignup(body) {
   const email = text(body.email, 254).toLowerCase();
   const company = text(body.company, 120);
   const role = text(body.role, 120);
+  // Where the visitor came from (?src= on any page), e.g. "li-ads-a-cost".
+  // Free text from the URL: kept only as a short tag, anything else dropped.
+  const rawSrc = typeof body.src === 'string' ? body.src.trim().toLowerCase() : '';
+  const src = /^[a-z0-9][a-z0-9-]{0,39}$/.test(rawSrc) ? rawSrc : '';
 
   if (!name) return { ok: false, status: 400, error: 'Enter your name.' };
   if (!EMAIL.test(email)) return { ok: false, status: 400, error: 'Enter a valid email address.' };
   if (body.consent !== true) {
     return { ok: false, status: 400, error: 'Tick the box so we can email you the link.' };
   }
-  return { ok: true, signup: { name, email, company, role } };
+  return { ok: true, signup: { name, email, company, role, src } };
 }
 
 function utcParts(date) {
@@ -211,6 +215,7 @@ export function notificationEmail(webinar, signup) {
     text: `${signup.name} <${signup.email}>
 Company: ${signup.company || '-'}
 Role: ${signup.role || '-'}
+Source: ${signup.src || '(direct)'}
 Webinar: ${webinar.title}, ${formatStart(webinar)}
 List: ${webinar.mailingList}
 `,

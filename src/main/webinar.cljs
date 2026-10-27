@@ -5,6 +5,7 @@
   (:require ["solid-js" :refer [createSignal onMount onCleanup]]
             ["@w3t-ab/sqeave" :as sqeave]
             ["./starfield.cljs" :refer [Starfield]]
+            ["./source.cljs" :as source]
             ["../../webinar.json$default" :as webinar])
   (:require-macros [sqeave :refer [defc]]))
 
@@ -78,7 +79,8 @@
                  (set-status "sending")
                  (set-error "")
                  (-> (post-signup {:name (name) :email (email) :company (company) :role (role)
-                                   :consent (consent) :website (website)})
+                                   :consent (consent) :website (website)
+                                   :src (source/current)})
                      (.then (fn [r]
                               (if (:ok r)
                                 (set-status "done")

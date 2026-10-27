@@ -12,7 +12,7 @@ const good = { name: ' Ada Lovelace ', email: 'Ada@Example.com', company: 'Analy
 test('accepts a complete signup and normalises it', () => {
   const r = validateSignup(good);
   assert.equal(r.ok, true);
-  assert.deepEqual(r.signup, { name: 'Ada Lovelace', email: 'ada@example.com', company: 'Analytical', role: '' });
+  assert.deepEqual(r.signup, { name: 'Ada Lovelace', email: 'ada@example.com', company: 'Analytical', role: '', src: '' });
 });
 
 test('refuses missing name, bad email and missing consent with a readable error', () => {
@@ -95,4 +95,11 @@ test('reminder variables carry the join link and agenda, and match the template'
     assert.ok(REMINDER_TEMPLATE_HTML.includes(`{{${name}}}`) || REMINDER_TEMPLATE_HTML.includes(`{{#each ${name}}}`), name);
   }
   assert.throws(() => reminderMessage(webinar, 'week', 'https://w3t.se'), /no join link/);
+});
+
+test('the source tag is kept when it is a short tag, dropped otherwise', () => {
+  assert.equal(validateSignup({ ...good, src: 'li-ads-a-cost' }).signup.src, 'li-ads-a-cost');
+  assert.equal(validateSignup({ ...good, src: 'Mattias-Email' }).signup.src, 'mattias-email');
+  assert.equal(validateSignup({ ...good, src: '<script>' }).signup.src, '');
+  assert.equal(validateSignup({ ...good, src: 'x'.repeat(41) }).signup.src, '');
 });

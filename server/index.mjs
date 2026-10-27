@@ -89,7 +89,7 @@ async function signup(req, res) {
     await mailer.addToList(webinar.mailingList, {
       address: s.email,
       name: s.name,
-      vars: { company: s.company, role: s.role, webinar: webinar.id, signed_up_at: new Date().toISOString() },
+      vars: { company: s.company, role: s.role, src: s.src, webinar: webinar.id, signed_up_at: new Date().toISOString() },
     }, `Webinar: ${webinar.title}`);
     const mail = confirmationEmail(webinar, s, SITE_URL);
     await mailer.send({

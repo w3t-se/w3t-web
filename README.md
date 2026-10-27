@@ -39,6 +39,11 @@ company and role, and a consent tick. It:
 2. emails them a confirmation with a calendar invite (`.ics`);
 3. emails a short note to `NOTIFY_TO` (info@w3t.se).
 
+Campaign tracking: a `?src=` tag on any page (e.g. `w3t.se/?src=li-ads-a-cost`)
+is kept for the visitor's session and stored with their signup as the list
+variable `src`, and shown in the note to info@w3t.se. Tags are lowercase
+letters, digits and dashes, up to 40 characters; anything else is dropped.
+
 Spam handling is a honeypot field and 5 signups per IP per 10 minutes. After
 the start time the endpoint answers 410. Without a Mailgun key it answers 503
 and the form says to email info@w3t.se.
