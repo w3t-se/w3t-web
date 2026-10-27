@@ -1,19 +1,32 @@
-{{- if .Values.httproute.hostnames }}
+{{- /*
+One HTTPRoute per hostname, each marked for w8s to publish.
+
+w8s only adopts a route carrying `w8s.cloud/managed: "true"`, and it
+publishes one hostname per route (the first it can; later passes see that
+hostname as held and stop). So a route listing both w3t.se and www.w3t.se
+would only ever get one of them published. A route per hostname gets each
+its own publication and certificate.
+
+An empty hostnames list renders nothing: a route without hostnames would
+match every host on the shared w8s-gateway.
+*/}}
+{{- range $host := .Values.httproute.hostnames }}
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: {{ .Release.Name }}
-  labels: {{- include "w3t-web.labels" . | nindent 4 }}
+  name: {{ $.Release.Name }}-{{ $host | replace "." "-" }}
+  labels: {{- include "w3t-web.labels" $ | nindent 4 }}
+  annotations:
+    w8s.cloud/managed: "true"
 spec:
   parentRefs:
-    - name: {{ .Values.httproute.gatewayName }}
-      namespace: {{ .Values.httproute.gatewayNamespace }}
+    - name: {{ $.Values.httproute.gatewayName }}
+      namespace: {{ $.Values.httproute.gatewayNamespace }}
   hostnames:
-    {{- range .Values.httproute.hostnames }}
-    - {{ . | quote }}
-    {{- end }}
+    - {{ $host | quote }}
   rules:
     - backendRefs:
-        - name: {{ .Release.Name }}
-          port: {{ .Values.service.port }}
+        - name: {{ $.Release.Name }}
+          port: {{ $.Values.service.port }}
 {{- end }}
