@@ -1,6 +1,6 @@
 # image: node:22-alpine
 # on: push main
-# input: index.html, src, resources, package.json, package-lock.json, vite.config.js, squint.edn, nginx.conf
+# input: .w8s, chart, index.html, src, resources, package.json, package-lock.json, vite.config.js, squint.edn, nginx.conf
 # cache: /root/.npm shared
 # artifact: /out
 #
