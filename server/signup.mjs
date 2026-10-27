@@ -196,3 +196,66 @@ export function rateLimiter({ max, windowMs, now = () => Date.now() }) {
     return entry.count <= max;
   };
 }
+
+// --- Reminders -----------------------------------------------------------
+
+/** The stored Mailgun template both reminders use. */
+export const REMINDER_TEMPLATE = 'webinar-reminder';
+
+/**
+ * The template's HTML (Handlebars). Variables: lead ("is next week" /
+ * "is tomorrow"), title, when, duration, join_url, page_url, agenda (a
+ * list of {time, topic}). Mailgun fills %mailing_list_unsubscribe_url%
+ * per member, which works only when sent to the list.
+ */
+export const REMINDER_TEMPLATE_HTML = `<div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.55;color:#1a1a1a;max-width:560px">
+<p>Hi,</p>
+<p>The W3T webinar <strong>{{title}}</strong> {{lead}}.</p>
+<p><strong>When:</strong> {{when}} (Stockholm time), {{duration}} minutes<br>
+<strong>Join:</strong> <a href="{{join_url}}">{{join_url}}</a></p>
+<p style="margin:20px 0"><a href="{{join_url}}" style="background:#2f6bff;color:#fff;text-decoration:none;padding:11px 18px;border-radius:4px;font-weight:600;display:inline-block">Join with Google Meet</a></p>
+<p><strong>Agenda</strong></p>
+<ul>{{#each agenda}}<li>{{this.time}}: {{this.topic}}</li>{{/each}}</ul>
+<p>Join from your browser a few minutes early; you don't need to install anything. Microphones are off for attendees, so ask your questions in the chat.</p>
+<p>Can't make it? Reply to this email and we'll send you the recording.</p>
+<p>W3T<br><a href="{{page_url}}">{{page_url}}</a></p>
+<p style="color:#888;font-size:12px">You get this because you registered for the webinar. <a href="%mailing_list_unsubscribe_url%">Unsubscribe</a></p>
+</div>`;
+
+const REMINDERS = {
+  week: { lead: 'is next week', subject: 'Next week', before: 7 * 24, window: [6 * 24, 8 * 24] },
+  day: { lead: 'is tomorrow', subject: 'Tomorrow', before: 24, window: [12, 36] },
+};
+
+/** Subject and template variables for reminder `kind` ("week" or "day"). */
+export function reminderMessage(webinar, kind, siteUrl) {
+  const r = REMINDERS[kind];
+  if (!r) throw new Error(`unknown reminder "${kind}": use week or day`);
+  const join = joinUrl(webinar);
+  if (!join) throw new Error('no join link: set app.webinarJoinUrl in the chart (WEBINAR_JOIN_URL)');
+  const when = formatStart(webinar);
+  return {
+    subject: `${r.subject}: ${webinar.title}, ${when}`,
+    variables: {
+      lead: r.lead,
+      title: webinar.title,
+      when,
+      duration: webinar.durationMinutes,
+      join_url: join,
+      page_url: `${siteUrl}/webinar`,
+      agenda: webinar.agenda.map(([time, topic]) => ({ time, topic })),
+    },
+  };
+}
+
+/**
+ * Whether reminder `kind` is due at `now`: within its window before the
+ * start (week: 6 to 8 days, day: 12 to 36 hours). A scheduled run outside
+ * it (a CronJob firing again next year) sends nothing.
+ */
+export function reminderDue(webinar, kind, now = Date.now()) {
+  const r = REMINDERS[kind];
+  if (!r) throw new Error(`unknown reminder "${kind}": use week or day`);
+  const hours = (new Date(webinar.start).getTime() - now) / 3_600_000;
+  return hours >= r.window[0] && hours <= r.window[1];
+}

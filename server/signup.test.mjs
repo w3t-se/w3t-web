@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
   validateSignup, webinarInvite, confirmationEmail, formatStart, rateLimiter, joinLinkEmail,
+  reminderMessage, reminderDue, REMINDER_TEMPLATE_HTML,
 } from './signup.mjs';
 
 const webinar = JSON.parse(fs.readFileSync(new URL('../webinar.json', import.meta.url), 'utf8'));
@@ -70,4 +71,28 @@ test('with a join link, the confirmation, invite and list email carry it', () =>
   assert.match(j.subject, /^Your join link: /);
   assert.match(j.text, /Join: https:\/\/meet\.google\.com\/abc-defg-hij/);
   assert.match(j.text, /%mailing_list_unsubscribe_url%/);
+});
+
+const at = (iso) => new Date(iso).getTime();
+
+test('the week reminder is due 6 to 8 days before, the day reminder 12 to 36 hours before', () => {
+  // Start: 2026-12-08 15:00 Stockholm (14:00 UTC).
+  assert.equal(reminderDue(webinar, 'week', at('2026-12-01T09:00:00Z')), true);
+  assert.equal(reminderDue(webinar, 'week', at('2026-12-05T09:00:00Z')), false);
+  assert.equal(reminderDue(webinar, 'day', at('2026-12-07T09:00:00Z')), true);
+  assert.equal(reminderDue(webinar, 'day', at('2026-12-08T09:00:00Z')), false);
+  // The CronJob fires again a year later: nothing is due.
+  assert.equal(reminderDue(webinar, 'week', at('2027-12-01T09:00:00Z')), false);
+  assert.throws(() => reminderDue(webinar, 'month'), /unknown reminder/);
+});
+
+test('reminder variables carry the join link and agenda, and match the template', () => {
+  const r = reminderMessage({ ...webinar, joinUrl: meet }, 'day', 'https://w3t.se');
+  assert.match(r.subject, /^Tomorrow: Leaving VMware/);
+  assert.equal(r.variables.join_url, meet);
+  assert.equal(r.variables.agenda.length, 4);
+  for (const name of Object.keys(r.variables)) {
+    assert.ok(REMINDER_TEMPLATE_HTML.includes(`{{${name}}}`) || REMINDER_TEMPLATE_HTML.includes(`{{#each ${name}}}`), name);
+  }
+  assert.throws(() => reminderMessage(webinar, 'week', 'https://w3t.se'), /no join link/);
 });

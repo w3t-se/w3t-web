@@ -1,0 +1,53 @@
+{{- if and .Values.app.reminders.enabled .Values.app.webinarJoinUrl }}
+{{- range $kind := list "week" "day" }}
+---
+# The {{ $kind }} reminder to the webinar's Mailgun list. send-reminder.mjs
+# sends only when this reminder is due, so a run outside its window (or
+# next year) is a no-op. Never retried: a retry could send twice.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ $.Release.Name }}-reminder-{{ $kind }}
+  labels: {{- include "w3t-web.labels" $ | nindent 4 }}
+spec:
+  schedule: {{ index $.Values.app.reminders $kind | quote }}
+  timeZone: {{ $.Values.app.reminders.timeZone | quote }}
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      ttlSecondsAfterFinished: 604800
+      template:
+        metadata:
+          # Not the Deployment's selector labels: the Service must never
+          # send site traffic to a reminder pod.
+          labels:
+            app.kubernetes.io/name: w3t-web-reminder
+            app.kubernetes.io/instance: {{ $.Release.Name }}
+        spec:
+          restartPolicy: Never
+          {{- with $.Values.imagePullSecrets }}
+          imagePullSecrets: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            seccompProfile: { type: RuntimeDefault }
+          containers:
+            - name: reminder
+              image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+              imagePullPolicy: {{ $.Values.image.pullPolicy }}
+              command: ["node", "server/send-reminder.mjs", {{ $kind | quote }}, "--yes"]
+              env: {{- include "w3t-web.env" $ | nindent 16 }}
+              resources: {{- toYaml $.Values.resources | nindent 16 }}
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: { drop: [ALL] }
+{{- end }}
+{{- end }}

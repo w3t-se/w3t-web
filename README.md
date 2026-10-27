@@ -55,8 +55,24 @@ kubectl -n w3t-web exec deploy/w3t-web -- node server/send-join-link.mjs --test 
 kubectl -n w3t-web exec deploy/w3t-web -- node server/send-join-link.mjs --yes               # the whole list
 ```
 
-For anything else (a reminder, the recording), send to the list address in
-Mailgun.
+### Reminders
+
+Two CronJobs in the chart send reminders to the list, one week and one day
+before (`app.reminders` in `chart/w3t-web/values.yaml`, Stockholm time). They
+send through the Mailgun template `webinar-reminder`, which
+`server/send-reminder.mjs` creates or updates from `server/signup.mjs`, so the
+template in the Mailgun dashboard is always what gets sent. A reminder only
+goes out inside its window (week: 6 to 8 days before, day: 12 to 36 hours
+before); a CronJob firing a year later sends nothing.
+
+By hand, in the pod:
+
+```console
+kubectl -n w3t-web exec deploy/w3t-web -- node server/send-reminder.mjs week --test you@w3t.se   # preview, any day
+kubectl -n w3t-web exec deploy/w3t-web -- node server/send-reminder.mjs day --yes                # list, if due
+```
+
+For anything else (the recording), send to the list address in Mailgun.
 
 ## Book a call
 

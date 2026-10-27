@@ -23,6 +23,16 @@ app:
   # server/send-join-link.mjs, never on the public site. Empty until set.
   webinarJoinUrl: 
   notifyTo: info@w3t.se
+  # Reminders to the webinar's Mailgun list (server/send-reminder.mjs),
+  # through the Mailgun template "webinar-reminder". Each CronJob sends
+  # only when its reminder is due (week: 6-8 days before the start, day:
+  # 12-36 hours before), so firing again a year later sends nothing.
+  # Cron fields are in timeZone. Webinar: Tuesday 8 December 2026, 15:00.
+  reminders:
+    enabled: true
+    timeZone: Europe/Stockholm
+    week: "0 10 1 12 *"   # Tuesday 1 December, 10:00
+    day: "0 10 7 12 *"    # Monday 7 December, 10:00
   mailgun:
     domain: mg.w3t.se
     url: https://api.eu.mailgun.net
